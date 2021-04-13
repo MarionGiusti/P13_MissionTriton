@@ -25,24 +25,52 @@
               required
               :rules="[v => !!v || 'Item is required']"
             />
-            <v-text-field
-              label="Date de début"
-              prepend-icon="mdi-clock-start"
-              type="text"
-              color="teal"
-              v-model="form.start_date"
-              required
-              :rules="[v => !!v || 'Item is required']"
-            />
-            <v-text-field
-              label="Date de fin"
-              prepend-icon="mdi-clock-end"
-              type="text"
-              color="teal"
-              v-model="form.end_date"
-              required
-              :rules="[v => !!v || 'Item is required']"
-            />
+            <v-menu
+              v-model="menu1"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="form.start_date"
+                  label="Date de début"
+                  prepend-icon="mdi-clock-start"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="form.start_date"
+                @input="menu1 = false"
+              ></v-date-picker>
+            </v-menu>
+            <v-menu
+              v-model="menu2"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="form.end_date"
+                  label="Date de fin"
+                  prepend-icon="mdi-clock-end"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="form.end_date"
+                @input="menu2 = false"
+              ></v-date-picker>
+            </v-menu>
         </v-form>
         <v-btn 
           class="btn"
@@ -65,6 +93,9 @@ export default {
 
  data () {
     return {
+        menu1: false,
+        menu2: false,
+
         valid: true,
         form: {
           name:"",

@@ -1,6 +1,6 @@
 <template>
   <v-tabs right>
-    <v-tab v-for="item in items" :key="item.title" router :to="{name: item.name}">
+    <v-tab v-for="item in items" :key="item.title" router :to="{name: item.name}" replace>
     {{ item.title }}
     </v-tab>
   </v-tabs>
@@ -35,7 +35,8 @@
           },
         ]
       }
-    },  
+    },
+    
   }
 
 </script>

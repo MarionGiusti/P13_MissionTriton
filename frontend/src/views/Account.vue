@@ -19,7 +19,7 @@
             size="230"
             tile
           >
-            <v-img :src= userDetails.profile_image></v-img>
+            <v-img :src= userDetails.profile_image ></v-img>
           </v-avatar></v-sheet>
       </div>
     </div>
@@ -213,6 +213,8 @@ export default {
 
   methods: {
     
+    
+
     onFileSelected(event) {
       console.log(event)
       this.selectedFile = event.target.files[0]

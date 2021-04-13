@@ -19,10 +19,8 @@
     </v-toolbar-title>
     <v-toolbar-title class="d-flex justify-center ml-16 pl-16" >
       <div  >
-      <h1 v-if="id">{{missionDetails.name}}
-      </h1>
-      <h3 v-if="id">{{missionDetails.ship_name}}
-      </h3>
+      <h1 v-if="id">{{missionDetails.name}}</h1>
+      <h3 v-if="id">{{missionDetails.ship_name}}</h3>
       </div>
     </v-toolbar-title>
  
@@ -48,7 +46,8 @@
       </template>
       <v-list>
         <v-list-item
-          v-for="(mission, i) in allMissions" :key="i" router :to="{name: 'HomeMission', params: {id: mission.id}}"
+          v-for="(mission, i) in allMissions" 
+          :key="i" router :to="{name: 'HomeMission', params: {id: mission.id}}"
         >
           <v-list-item-title>{{ mission.name }}</v-list-item-title>
         </v-list-item>
@@ -133,6 +132,17 @@ import { mapState } from 'vuex'
           },
         ],
 
+      }
+    },
+
+    watch: {
+      '$route'(to, from) {
+        console.log('to', to);
+        console.log('from', from);
+        if(to !== from ) {
+          this.id = this.$route.params.id;
+          console.log('id', this.id)
+        }
       }
     },
 

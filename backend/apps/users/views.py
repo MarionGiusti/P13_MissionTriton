@@ -6,7 +6,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
-
 from .serializers import UserSerializer, MissionUserSerializer
 from .models import CustomUser, MissionUser
 
@@ -16,6 +15,8 @@ from .models import CustomUser, MissionUser
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+
+
 
 class CustomAuthToken(ObtainAuthToken):
 
@@ -53,10 +54,20 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(methods=["POST"], detail=False)
     def profile_picture(self, request):
         print("HEEEEELLLLLLLLOOOOOOO", request.FILES, request.FILES["file"])
-        
-        user = self.get_object()
-        userserializer = UserSerializer(data=request.data)
+      
+        user = CustomUser.objects.get(id = request.user.id)
+        user.profile_image = request.FILES["file"]
+        user.save()
+
         print("huuuuuuuuuu", user)
+        print("iiiiiiii", user.profile_image.name)
+        print("poooooo", user.profile_image.url)
+
+        return Response(
+            {"test": user.profile_image.name},
+            status=status.HTTP_200_OK,
+        )
+
         # if userserializer.is_valid():
         #     userserializer.save()
         #     return Response(userserializer.data, status=status.HTTP_201_CREATED)

@@ -45,7 +45,7 @@ const routes = [
     children: [
       {
         name: 'HomeMission',
-        path: '',
+        path: '/mission/:id/',
         component: HomeMission
       },
       {

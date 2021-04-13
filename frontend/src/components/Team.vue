@@ -15,14 +15,6 @@
               contain
             >
             </v-img>
-          <!-- <v-avatar
-            class="profile"
-            color="grey"
-            size="164"
-            tile
-          >
-            <v-img :src="item.src"></v-img>
-          </v-avatar> -->
 
           <v-card-subtitle class="pb-0 text-center">
             {{ item.name }}
@@ -98,7 +90,8 @@
           },
         ]
       }
-    } 
+    },
+    
   }
 
 </script>

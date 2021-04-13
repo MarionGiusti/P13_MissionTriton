@@ -13,7 +13,7 @@ export default new Vuex.Store({
     userDetails: {},
     allMissions: [],
     missionDetails: {},
-    "id_mission": null
+    // "id_mission": null
   },
 
   getters: {
@@ -139,8 +139,16 @@ export default new Vuex.Store({
       })
     },
 
-    async loadMissionDetails({ commit, state }) {
-      await getAPI.get('/api/missions/' + state.id_mission)
+    // async loadMissionDetails({ commit, state }) {
+    //   await getAPI.get('/api/missions/' + state.id_mission)
+    //   .then(data => {
+    //     console.log('methods loadmissionDetails:', data.data)
+    //     let missionDetails = data.data
+    //     commit('setMissionDetails', missionDetails)
+    //   })
+    async loadMissionDetails({ commit }, missionID) {
+      console.log('CHALALA', missionID)
+      await getAPI.get('/api/missions/' + missionID + '/')
       .then(data => {
         console.log('methods loadmissionDetails:', data.data)
         let missionDetails = data.data

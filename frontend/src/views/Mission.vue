@@ -4,8 +4,8 @@
       <NavMission/>
     </NavLink>
     <!-- <v-container class="fill-height" fluid> -->
-      <router-view />
-      <!-- <router-view :key="$route.path"/> -->
+    <router-view />
+      <!-- <router-view :key="$route.fullPath"/> -->
     <!-- </v-container> -->
   </div>
 </template>
@@ -24,11 +24,9 @@ export default {
     NavMission,
   },
 
-// pour charger titre navlink ?
-  created() {
-    this.$store.state.id_mission = this.$route.params.id;
-    // alert(this.$route.params)
-  },
+// created() {
+    // this.$store.state.id_mission = this.$route.params.id;
+// },
 
   destroyed() {
     this.$store.missionDetails = {}
@@ -39,14 +37,16 @@ export default {
       console.log('to', to);
       console.log('from', from);
       if(to !== from ) {
-        this.$store.dispatch('loadMissionDetails');
+        this.$store.dispatch('loadMissionDetails', this.$route.params.id);
+        console.log('reload loadMossionDetails')
       }
     }
   },
 
   mounted() {
+    console.log('CHOUOOOU', this.$route.params.id, "idmission", this.$store.state.id_mission)
     this.$store
-      .dispatch('loadMissionDetails')
+      .dispatch('loadMissionDetails', this.$route.params.id)
       .then(() => console.log('loadMissionDetails ok', this.$store.state.missionDetails))
       .catch(err => {
         console.log(err)
@@ -55,7 +55,7 @@ export default {
 
   data() {
     return {
-        id: this.$route.params.id
+        id: this.$route.params.id,
       }
   },
 
