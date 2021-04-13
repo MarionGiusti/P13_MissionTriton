@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'apps.users',
+    'apps.missions',
+    'apps.posts',
+    'apps.schedules',
 ]
 
 MIDDLEWARE = [
@@ -86,6 +89,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:8080',
 )
 
+CSRF_COOKIE_NAME = "csrftoken"
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -112,6 +117,8 @@ REST_FRAMEWORK = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = "users.CustomUser" 
 
 AUTH_PASSWORD_VALIDATORS = [
     {

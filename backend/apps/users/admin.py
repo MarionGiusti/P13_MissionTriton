@@ -1,5 +1,9 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, MissionUser
 
-from .models import UserProfile
+admin.site.register(CustomUser)
 
-admin.site.register(UserProfile)
+@admin.register(MissionUser)
+class MissionUserAdmin(admin.ModelAdmin):
+    list_filter = ['mission']

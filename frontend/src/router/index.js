@@ -1,28 +1,84 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
+import About from '../views/About.vue'
+import Account from '../views/Account.vue'
+import AddMission from '../views/AddMission.vue'
+import Gallery from '../views/Gallery.vue'
 import Home from '../views/Home.vue'
+import HomeMission from '../views/HomeMission.vue'
 import Login from '../views/Login.vue'
+import Mediation from '../views/Mediation.vue'
+import Mission from '../views/Mission.vue'
+import OnBoard from '../views/OnBoard.vue'
+import Register from '../views/Register.vue'
+import Schedule from '../views/Schedule.vue'
+
+
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    name: 'Account',
+    path: '/account/:userId',
+    component: Account,
+  },
+  {
+    name: 'AddMission',
+    path: '/add-mission/:userId',
+    component: AddMission,
+  },
+  {
     name: 'Home',
-    component: Home
+    path: '/',
+    component: Home,
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
-    path: '/login',
     name: 'Login',
-    component: Login
+    path: '/login',
+    component: Login,
+  },
+  {
+    path: '/mission/:id',
+    component: Mission,
+    children: [
+      {
+        name: 'HomeMission',
+        path: '',
+        component: HomeMission
+      },
+      {
+        name: 'About',
+        path: 'about',
+        component: About
+      },
+      {
+        name: 'Mediation',
+        path: 'mediation',
+        component: Mediation
+      },
+      {
+        name: 'OnBoard',
+        path: 'onboard',
+        component: OnBoard
+      },
+      {
+        name: 'Gallery',
+        path: 'gallery',
+        component: Gallery
+      },
+    ],
+  },
+  {
+    name: 'Register',
+    path: '/register',
+    component: Register,
+  },
+  {
+    name: 'Schedule',
+    path: '/schedule/:userId',
+    component: Schedule,
   },
 ]
 
