@@ -7,6 +7,7 @@ import AddMission from '../views/AddMission.vue'
 import Gallery from '../views/Gallery.vue'
 import Home from '../views/Home.vue'
 import HomeMission from '../views/HomeMission.vue'
+import LegalMentions from '../views/LegalMentions.vue'
 import Login from '../views/Login.vue'
 import Mediation from '../views/Mediation.vue'
 import Mission from '../views/Mission.vue'
@@ -33,6 +34,11 @@ const routes = [
     name: 'Home',
     path: '/',
     component: Home,
+  },
+  {
+    name: 'LegalMentions',
+    path: '/mentions',
+    component: LegalMentions,
   },
   {
     name: 'Login',

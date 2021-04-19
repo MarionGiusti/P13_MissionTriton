@@ -9,13 +9,20 @@
         no-gutters
       >
         <v-col align="center">
-          <v-btn
-            v-for="link in links"
-            :key="link"
-            text
+            <v-btn text
+            v-for="(item, i) in items"
+            :key="i" :to="{name: item.route}"
           >
-            {{ link }}
+            {{ item.title }}
           </v-btn>
+          <!-- <v-list>
+            <v-list-item
+              v-for="item in items"
+            :key="i" router :to="{name: item.route}"
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list> -->
         </v-col>
         <v-col
           class="text-center"
@@ -33,12 +40,28 @@
   export default {
     name: 'Footer',
     data: () => ({
-      links: [
-        'Accueil',
-        'Mission Triton',
-        'Contact',
-        'Mentions Légales'
-      ],
+      items: [
+        {
+          title:"Accueil",
+          route:"Home",
+          action: "",
+        },
+        {
+          title:"Mission Triton",
+          route:"Home",
+          action: "",
+        },
+        {
+          title:"Contact",
+          route:"Home",
+          action: "",
+        },
+        {
+          title:"Mentions Légales",
+          route:"LegalMentions",
+          action: "",
+        },
+      ]
     }),
   }
 
