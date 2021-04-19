@@ -10,8 +10,11 @@ from apps.missions.models import Mission
 
 class CustomUser(AbstractUser):
     profile_image = models.ImageField(upload_to="profile_pics", default="profile.png", null=True)
+    profile_background_image = models.ImageField(upload_to="profile_background_pics", default="jakob-owens-turtle-unsplash.jpg", null=True)
     linkedin_link = models.URLField(null=True, blank=True)
     researchgate_link = models.URLField(null=True, blank=True)
+    missions = models.ManyToManyField(Mission, through='MissionUser')
+
 
 class MissionUser(models.Model):
     user = models.ForeignKey(get_user_model(), null=False, on_delete=models.PROTECT, related_name="missionusers")

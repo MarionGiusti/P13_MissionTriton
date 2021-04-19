@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Post
+from .models import Post, Picture
 from apps.users.serializers import MissionUserSerializer
 from apps.missions.serializers import MissionSerializer
 
@@ -19,7 +19,21 @@ class PostSerializer(serializers.ModelSerializer):
             "date",
             "created_at",
             "updated_at",
-            "image",
+            "post_image",
             "video_url",
             "category",
+        )
+
+
+class PictureSerializer(serializers.ModelSerializer):
+    mission = serializers.StringRelatedField(many=False, read_only=True)
+
+    class Meta:
+        model = Picture
+        fields = (
+            "id",
+            "mission",
+            "picture",
+            "title",
+            "created_at",
         )

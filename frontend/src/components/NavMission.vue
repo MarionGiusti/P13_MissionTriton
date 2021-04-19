@@ -1,5 +1,6 @@
 <template>
-  <v-tabs right>
+  <v-tabs right color="#09033E">
+    <v-tabs-slider color="#09033E"></v-tabs-slider>
     <v-tab v-for="item in items" :key="item.title" router :to="{name: item.name}" replace>
     {{ item.title }}
     </v-tab>

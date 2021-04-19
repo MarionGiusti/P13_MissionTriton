@@ -6,7 +6,7 @@
       <router-view/>
     <!-- </v-container> -->
     <!-- </v-main> -->
-    <v-footer>
+    <v-footer color="#A3D0CA">
       <Footer/>
     </v-footer> 
   </v-app> 
@@ -16,12 +16,19 @@
 import NavLink from './components/NavLink.vue'
 import Footer from './components/Footer.vue'
 
-
 export default {
   name: 'App',
   components: {
     NavLink,
     Footer,
+  },
+
+  mounted() {
+    this.$store
+      .dispatch('loadMissionList')
+      .catch(err => {
+        console.log(err)
+      });
   },
 
 };

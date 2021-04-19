@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-container >
+    <v-container class="d-flex flex-column background-wrap" fluid >
       Galerie photos
       <div class="block galleryBlock">
         <v-row>
@@ -45,3 +45,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+.background-wrap {
+  margin-top: 40px;
+  background-color:#54658C;
+  width: 95%;
+}
+</style>

@@ -79,16 +79,20 @@
           @click="addMission(form)"
         >Ajouter</v-btn>
       </div>
+       <AddMissionuser/>
+
     </v-container>
   </v-main>
 </template>
 
 <script>
 // import { mapActions } from 'vuex'
+import AddMissionuser from '@/components/AddMissionuser'
 
 export default {
   name: 'AddMission',
   components: {
+    AddMissionuser,
   },
 
  data () {
@@ -114,7 +118,8 @@ export default {
         await this.$store
           .dispatch('missionRegister', { name, ship, start_date, end_date })
           .then(() => console.log('addMission ok'))
-          .then(() => this.$router.push('/'))
+          // .then(() => this.$router.push('/'))
+          .then(() => alert(`La mission: ${name} a bien été enregistrée !`))
           .catch(err => {
             console.log(err)
           });

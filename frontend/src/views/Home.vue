@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+// import {mapState} from 'vuex'
+// import { mapGetters } from 'vuex'
 import HeroBlock from '@/components/HeroBlock'
 
 export default {
@@ -16,18 +17,18 @@ export default {
     HeroBlock,
   },
 
-  mounted() {
-    this.$store
-      .dispatch('loadMissionList')
-      .catch(err => {
-        console.log(err)
-      });
-  },
-  computed: {
-    ...mapState([
-      'allMissions'
-    ])
-  },
+  // mounted() {
+  //   this.$store
+  //     .dispatch('loadMissionList')
+  //     .catch(err => {
+  //       console.log(err)
+  //     });
+  // },
+  // computed: {
+  //   ...mapState([
+  //     'allMissions'
+  //   ])
+  // },
 }
 </script>
 

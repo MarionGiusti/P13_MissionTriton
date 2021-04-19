@@ -11,8 +11,9 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
-import { mapActions } from 'vuex'
+// import {mapState} from 'vuex'
+// import { mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import NavLink from '@/components/NavLink'
 import NavMission from '@/components/NavMission'
@@ -24,34 +25,34 @@ export default {
     NavMission,
   },
 
-// created() {
-    // this.$store.state.id_mission = this.$route.params.id;
-// },
+  // destroyed() {
+  //   this.$store.missionDetails = {}
+  // },
 
-  destroyed() {
-    this.$store.missionDetails = {}
-  },
+// Plus besoin des watchs avec getter ?
+  // watch: {
+  //   '$route'(to, from) {
+  //     console.log('to', to);
+  //     console.log('from', from);
+  //     if(to !== from ) {
+  //       // this.$store.dispatch('loadMissionDetails', this.$route.params.id);
+  //       this.$store.getters.currentMission(this.$route.params.id)
+  //       console.log('reload loadMossionDetails')
+  //     }
+  //   }
+  // },
 
-  watch: {
-    '$route'(to, from) {
-      console.log('to', to);
-      console.log('from', from);
-      if(to !== from ) {
-        this.$store.dispatch('loadMissionDetails', this.$route.params.id);
-        console.log('reload loadMossionDetails')
-      }
-    }
-  },
+  // mounted() {
+    // console.log('CHOUOOOU', this.$route.params.id, "idmission", this.$store.state.id_mission)
+    // this.$store
+    //   .dispatch('loadMissionDetails', this.$route.params.id)
+    //   .then(() => console.log('loadMissionDetails ok', this.$store.state.missionDetails))
+    //   .catch(err => {
+    //     console.log(err)
+    //   });
 
-  mounted() {
-    console.log('CHOUOOOU', this.$route.params.id, "idmission", this.$store.state.id_mission)
-    this.$store
-      .dispatch('loadMissionDetails', this.$route.params.id)
-      .then(() => console.log('loadMissionDetails ok', this.$store.state.missionDetails))
-      .catch(err => {
-        console.log(err)
-      });
-},
+    // console.log('geeeet', this.$store.getters.currentMission(this.$route.params.id))
+  // },
 
   data() {
     return {
@@ -59,16 +60,24 @@ export default {
       }
   },
 
+  
+
   computed: {
-    ...mapState([
-      'allMissions',
-      'missionDetails'
-    ])
+    // ...mapState([
+      // 'allMissions',
+      // 'missionDetails'
+    // ])
+    ...mapGetters([ 'currentMission' ]),
+      missionD() {
+        return this.currentMission(this.$route.params.id)
+      }
+
   },
+
   methods: {
-    ...mapActions([
-        'loadIdMission',
-      ]),
+    // ...mapActions([
+    //     'loadIdMission',
+    //   ]),
   },
 }
 

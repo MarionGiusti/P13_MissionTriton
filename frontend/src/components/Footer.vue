@@ -2,6 +2,7 @@
   <v-container>
     <v-footer
         padless
+        color="#A3D0CA"
       >   
       <v-row
         justify="center"

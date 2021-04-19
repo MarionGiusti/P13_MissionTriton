@@ -1,7 +1,7 @@
 <template>
   <v-main>
-    <v-container>
-      <v-row>
+    <v-container class="d-flex flex-column background-wrap" fluid>
+      <v-row >
         <v-col cols="12">
           <h1>Actu</h1>
           <v-divider/>
@@ -23,6 +23,7 @@
 
 import Map from '@/components/Map'
 import Post from '@/components/Post'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'HomeMission',
@@ -42,11 +43,29 @@ export default {
         ]
       }
   },
+
+  computed: {
+    // ...mapState([
+      // 'allMissions',
+      // 'missionDetails'
+    // ])
+    ...mapGetters([ 'currentMission' ]),
+      missionD() {
+        return this.currentMission(this.$route.params.id)
+      },
+
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .home-carousel {
   height: 500px !important;
+}
+// #98ACD7
+.background-wrap {
+  margin-top: 40px;
+  background-color:#54658C;
+  width: 95%;
 }
 </style>

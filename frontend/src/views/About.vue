@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-container>
+    <v-container  class="d-flex flex-column background-wrap" fluid >
       <h2>Notre mission</h2>
       <v-divider/>
       <MissionGoals/>
@@ -34,3 +34,12 @@ import Timeline from '@/components/Timeline'
     },
   }
 </script>
+
+<style lang="scss" scoped>
+
+.background-wrap {
+  margin-top: 40px;
+  background-color:#54658C;
+  width: 95%;
+}
+</style>

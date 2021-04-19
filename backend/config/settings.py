@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.missions',
     'apps.posts',
     'apps.schedules',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

@@ -26,3 +26,12 @@ class Post(models.Model):
         (2, 'A_bord')
     )
     category = models.IntegerField(choices=CATEGORY_STATUS)
+
+class Picture(models.Model):
+    mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
+    picture = models.ImageField(upload_to="missions_pics", null=False)
+    title = models.CharField(max_length=200, null=True)
+    created_at = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.picture}'

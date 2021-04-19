@@ -8,16 +8,22 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    "token": localStorage.getItem('token') || null,
-    "user_id": localStorage.getItem('user_id') || null,
+    token: localStorage.getItem('token') || null,
+    user_id: localStorage.getItem('user_id') || null,
     userDetails: {},
-    allMissions: [],
-    missionDetails: {},
+    // missionList: [] ,
+    missions: [],
+    // allMissions: [],
+    // missionDetails: {},
     // "id_mission": null
+    missionUserDetails: {},
   },
 
   getters: {
-    getField
+    getField,
+    currentMission: (state) => (id) => {
+      return state.missions.find(missions => missions.id === id)
+    }
   },
 
   mutations: {
@@ -36,17 +42,32 @@ export default new Vuex.Store({
       state.userDetails = Object.assign({}, state.userDetails, values);
     },
    
-    setMissionList(state, allMissions) {
-      state.allMissions = allMissions
-      console.log('setmissionList mutation:', allMissions)
+    // setMissionList(state, missList) {
+    //   state.missionList = missList
+    //   console.log('setMissionList mutation:', missList)
+    // },
+
+    setMissions(state, allMissions) {
+      state.missions = allMissions
+      console.log('setMissions mutation:', allMissions)
     },
-    setMissionDetails(state, missionDetails){
-      state.missionDetails = missionDetails
-      console.log('setmissionDetails mutation:', missionDetails)
-    },
+
+    // setMissionDetails(state, missionDetails){
+    //   state.missionDetails = missionDetails
+    //   console.log('setmissionDetails mutation:', missionDetails)
+    // },
     
     updateMissionList(data) {
       console.log('updatemissionlist:', data)
+    },
+
+    setMissionuser(state, missionUserDetails) {
+      state.missionUserDetails = missionUserDetails
+      console.log('setMissionuser mutation:', missionUserDetails)
+    },
+
+    updateMissionUserDetails(state, values) {
+      state.missionUserDetails = Object.assign({}, state.missionUserDetails, values);
     },
   
   },
@@ -59,7 +80,7 @@ export default new Vuex.Store({
           })
         localStorage.setItem('token', data.token)
         localStorage.setItem('user_id', data.user_id)
-        console.log("dataToken:", data)
+        console.log("action userLogin, dataToken:", data)
         commit('SetTokenId', data)
     },
 
@@ -81,11 +102,10 @@ export default new Vuex.Store({
           start_date: missioncredentials.start_date,
           end_date: missioncredentials.end_date,
         })
-        console.log('missionRegister:', data)
+        console.log('action missionRegister:', data)
         commit('updateMissionList', data)
     },
 
-    
     // userLogout({ commit }, token ) {
     //   token = null
     //   commit('updateToken', token)
@@ -96,7 +116,9 @@ export default new Vuex.Store({
         user_id: null,
         token: null
       }
-      console.log("logoutData:", data)
+      localStorage.removeItem('token')
+      localStorage.removeItem('user_id')
+      console.log("action userLogout, logoutData:", data)
       commit('SetTokenId', data)
     },
 
@@ -110,15 +132,14 @@ export default new Vuex.Store({
           researchgate_link: usercredentials.researchgate_link,
         }, {
         headers: { 'Authorization': 'Token ' + state.token,}})
-        console.log("dataUserProfile:", data)
+        console.log("action patchUserProfile:", data)
         commit('updateUserDetails', data)
     },
 
     loadUserDetails({ commit, state }) {
       getAPI.get('api/users/' + state.user_id + '/')
-      // .then(response => response.data)
       .then(data => {
-        console.log('methods loadUserDetails:', data)
+        console.log('action loadUserDetails:', data)
         let userDetails = data.data
         commit('setUserDetails', userDetails)
       })
@@ -126,44 +147,65 @@ export default new Vuex.Store({
         console.log(error)
       })
     },
-      
+   
     async loadMissionList({ commit }) {
       await getAPI.get('/api/missions/')
       .then(data => {
-        console.log('methods loadMissionList:', data)
-        let allMissions = data.data
-        commit('setMissionList', allMissions)
+        // // console.log('action loadMissionList:', data)
+        // let allMissions = data.data;
+        // let missList = [];
+        // // console.log('allMissions:', allMissions)
+        // allMissions.forEach((mission) => {
+        //   missList.push({"id":mission.id, "name":mission.name})
+        //   // console.log('miss', mission)
+        // })
+        // // console.log('missList:',missList)
+        // commit('setMissionList', missList)
+        commit('setMissions', data.data)
       })
       .catch(error => {
         console.log(error)
       })
     },
 
-    // async loadMissionDetails({ commit, state }) {
-    //   await getAPI.get('/api/missions/' + state.id_mission)
+  
+    async get_listmissionusers({commit, state}, missionId) {
+      // await getAPI.get('/api/users/missionusers/?missionid=1',
+      await getAPI.get('/api/users/missionusers/' + missionId + '/',
+        {headers: { 'Authorization': 'Token ' + state.token }})
+      .then(data => {
+        console.log('get_listmissionusers action', data.data)
+        commit('setMissionuser', data.data)})
+      .catch(error => {
+        console.log(error)
+        commit('setMissionuser', {})
+      })
+    },
+
+    async patchMissionUserProfile({ commit, state }, missionusercredentials) {
+      const { data } = await getAPI.patch('api/users/missionusers/' + state.missionUserDetails.id + '/', {
+          job: missionusercredentials.job,
+          team_lab: missionusercredentials.team_lab,
+          description: missionusercredentials.description,
+        }, {
+        headers: { 'Authorization': 'Token ' + state.token,}})
+        console.log("action patchMissionUserProfile:", data)
+        commit('updateMissionUserDetails', data)
+    },
+
+    // async loadMissionDetails({ commit }, missionID) {
+    //   console.log('CHALALA', missionID)
+    //   await getAPI.get('/api/missions/' + missionID + '/')
     //   .then(data => {
-    //     console.log('methods loadmissionDetails:', data.data)
+    //     console.log('action loadmissionDetails:', data.data)
     //     let missionDetails = data.data
     //     commit('setMissionDetails', missionDetails)
     //   })
-    async loadMissionDetails({ commit }, missionID) {
-      console.log('CHALALA', missionID)
-      await getAPI.get('/api/missions/' + missionID + '/')
-      .then(data => {
-        console.log('methods loadmissionDetails:', data.data)
-        let missionDetails = data.data
-        commit('setMissionDetails', missionDetails)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-
-    // userAccount({ commit }) {
-    //   getAPI.post('api/users/users/1').then(response => {
-    //   commit('updateProfile', response.data)
+    //   .catch(error => {
+    //     console.log(error)
     //   })
-    // }
+    // },
+
   },
 
   modules: {

@@ -8,7 +8,7 @@ from rest_framework import status
 
 from .serializers import UserSerializer, MissionUserSerializer
 from .models import CustomUser, MissionUser
-
+from apps.missions.models import Mission
 
 ###########
 # test customauthtoken
@@ -52,29 +52,28 @@ class UserViewSet(viewsets.ModelViewSet):
     #     )
 
     @action(methods=["POST"], detail=False)
-    def profile_picture(self, request):
-        print("HEEEEELLLLLLLLOOOOOOO", request.FILES, request.FILES["file"])
-      
+    def profile_picture(self, request):     
         user = CustomUser.objects.get(id = request.user.id)
         user.profile_image = request.FILES["file"]
         user.save()
-
-        print("huuuuuuuuuu", user)
-        print("iiiiiiii", user.profile_image.name)
-        print("poooooo", user.profile_image.url)
 
         return Response(
             {"test": user.profile_image.name},
             status=status.HTTP_200_OK,
         )
 
-        # if userserializer.is_valid():
-        #     userserializer.save()
-        #     return Response(userserializer.data, status=status.HTTP_201_CREATED)
-        # else:
-        #     return Response(userserializer.errors,
-        #                     status=status.HTTP_400_BAD_REQUEST)
+    @action(methods=["POST"], detail=False)
+    def background_picture(self, request):
+        print("HEEEEELLLLLLLLOOOOOOO", request.FILES, request.FILES["file"])
+      
+        user = CustomUser.objects.get(id = request.user.id)
+        user.profile_background_image = request.FILES["file"]
+        user.save()
 
+        return Response(
+            {"test": user.profile_background_image.name},
+            status=status.HTTP_200_OK,
+        )
 
 
 class MissionUserViewSet(viewsets.ModelViewSet):
@@ -84,5 +83,44 @@ class MissionUserViewSet(viewsets.ModelViewSet):
     queryset = MissionUser.objects.all()
     serializer_class = MissionUserSerializer
     authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticatedOrReadOnly,)
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    # permission_classes = (AllowAny,)
+
+    def create(self, request, *args, **kwargs):
+        print("TRALALA", request.data)
+        data = request.data
+
+        mission = Mission.objects.get(name = data["mission"])
+        mission_id = mission.id
+
+        # for mail in data["email"]:
+            # print("MMMMMM",mail)
+            # user = CustomUser.objects.get(email = mail)
+            # user_id = user.id
+            # new_missionuser = MissionUser(user=user_id, mission=mission_id)
+            # new_missionuser.save()
+        user = CustomUser.objects.get(email = data["email"])
+        user_id = user.id
+
+        new_missionuser = MissionUser.objects.create(user=user, mission=mission)
+        print("new missionuser:", new_missionuser)
+        new_missionuser.save()
+
+        return Response(
+            {"test": new_missionuser},
+            status=status.HTTP_200_OK,
+        )
+
+    def list(self, request):
+        print("HULLOOOOOOO", request.user.id)
+        queryset= self.get_queryset()
+        # queryset = queryset.filter(user = request.user)
+        queryset = queryset.filter(user = request.user.id)
+        mission_id = request.GET.get('missionid')
+        print("mission_id type", type(mission_id))
+        
+        if mission_id:
+            queryset = queryset.filter(mission__id = mission_id)
+        serializer = MissionUserSerializer(queryset, many=True)
+        print("serializer.data:", serializer.data)
+        return Response(serializer.data)

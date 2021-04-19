@@ -1,6 +1,9 @@
 <template>
   <v-container>
     <v-row>
+      <h4 v-if=" missionD.ship_positions">LALA: {{ missionD.ship_positions }}
+      HHI: {{  missionD.ship_positions[0][2] }}
+      </h4>
       <v-col cols="2">
     <!-- <v-btn @click="drawMarkers">Draw Marker</v-btn>
     <v-btn @click="drawDirection">Draw Direction</v-btn> -->
@@ -34,18 +37,24 @@
             ></v-text-field> -->
 
             <v-btn
+              elevation="2"
               :disabled="!valid"
               class="btn"
               outlined
               @click="validate"
+              color="#09033E"
+              small
             >
               Validate
             </v-btn>
 
             <v-btn
+            elevation="2"
             class="btn"
             outlined
-              @click="resetValidation"
+            @click="resetValidation"
+            color="#09033E"
+            small
             >
               Reset Form
             </v-btn>
@@ -80,6 +89,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
+
 // const home = { lat: 53.562, lng: -2.253};
 // const work = { lat: 53.463, lng: -2.249}
 const lineSymbol = {
@@ -137,10 +149,16 @@ const lineSymbol = {
           lat: this.markers[0].position.lat,
           lng: this.markers[0].position.lng,
         }
-      }
+      },
+
+      ...mapGetters([ 'currentMission' ]),
+      missionD() {
+        return this.currentMission(this.$route.params.id);
+      },
+
     },
 
-
+    // OLD
     // mounted(){
     //   this.map = new window.google.maps.Map(this.$ref["map"], {
     //     center: {lat: -25, lng:130},
@@ -151,10 +169,13 @@ const lineSymbol = {
     //     map: this.map
     //   })
     // },
+    
+    //FONCTIONNE
     mounted() {
       this.drawDirection()
       this.drawMarkers()
     },
+
     methods: {
       drawMarkers() {
         // console.log(this.markers[0].position)

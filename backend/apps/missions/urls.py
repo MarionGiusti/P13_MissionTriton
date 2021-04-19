@@ -9,8 +9,8 @@ from .views import (
 )
 
 router = routers.DefaultRouter()
-router.register(r'timeline', TimeLineViewSet)
-router.register(r'shipposition', ShipPositionViewSet)
+router.register(r'timelines', TimeLineViewSet)
+router.register(r'shippositions', ShipPositionViewSet)
 router.register(r'', MissionViewSet)
 
 urlpatterns = [
