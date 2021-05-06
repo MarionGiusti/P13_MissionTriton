@@ -31,7 +31,17 @@ class CustomAuthToken(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
-###########
+
+    def create(self, request, *args, **kwargs):
+        print("TRALAAAAAAAAAAaLA", request.data)
+        data = request.data
+        new_user = MissionUser.objects.create(email = data["email"], username = data["username"], password = data["password1"])
+        print("new user:", new_user)
+        new_user.save()
+        serializer = UserSerializer(new_user)
+        return Response(serializer.data)
+
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -42,15 +52,6 @@ class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
     
-    # @action(methods=["POST"], detail=False)
-    # def profile_picture(self, request):
-    #     print("HEEEEELLLLLLLLOOOOOOO", request.FILES, request.FILES["file"])
-
-    #     return Response(
-    #         {"test": "hello"},
-    #         status=status.HTTP_200_OK,
-    #     )
-
     @action(methods=["POST"], detail=False)
     def profile_picture(self, request):     
         user = CustomUser.objects.get(id = request.user.id)
@@ -75,7 +76,6 @@ class UserViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-
 class MissionUserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -90,9 +90,10 @@ class MissionUserViewSet(viewsets.ModelViewSet):
         print("TRALALA", request.data)
         data = request.data
 
-        mission = Mission.objects.get(name = data["mission"])
-        mission_id = mission.id
+        # mission = Mission.objects.get(name = data["mission"])
+        mission = Mission.objects.get(id = data["missionId"])
 
+        # mission_id = mission.id
         # for mail in data["email"]:
             # print("MMMMMM",mail)
             # user = CustomUser.objects.get(email = mail)
@@ -100,16 +101,12 @@ class MissionUserViewSet(viewsets.ModelViewSet):
             # new_missionuser = MissionUser(user=user_id, mission=mission_id)
             # new_missionuser.save()
         user = CustomUser.objects.get(email = data["email"])
-        user_id = user.id
-
+        # user_id = user.id
         new_missionuser = MissionUser.objects.create(user=user, mission=mission)
         print("new missionuser:", new_missionuser)
         new_missionuser.save()
-
-        return Response(
-            {"test": new_missionuser},
-            status=status.HTTP_200_OK,
-        )
+        serializer = MissionUserSerializer(new_missionuser)
+        return Response(serializer.data)
 
     def list(self, request):
         print("HULLOOOOOOO", request.user.id)
@@ -124,3 +121,52 @@ class MissionUserViewSet(viewsets.ModelViewSet):
         serializer = MissionUserSerializer(queryset, many=True)
         print("serializer.data:", serializer.data)
         return Response(serializer.data)
+
+    @action(methods=["GET"], detail=False)
+    def get_team(self, request):
+        mission_id = request.GET.get('missionId')
+        print('GET TEAM', mission_id)
+
+        # team = MissionUser.objects.filter(mission__id = mission_id)
+
+        team = MissionUser.objects.filter(mission__id = mission_id).values()
+        print('TEAM', team)
+
+        team_mission = []
+        for member in team:
+            print("MEMBER", member)
+            user = CustomUser.objects.filter(id= member["user_id"]).values()
+            print("USER", user)
+            print("USER2", user[0]["id"])
+            team_user = {
+            'first_name': user[0]["first_name"],
+            'last_name': user[0]["last_name"],
+            'email': user[0]["email"],
+            'picture': user[0]["profile_image"],
+            'linkedin': user[0]["linkedin_link"],
+            'researchgate': user[0]["researchgate_link"],
+            'job': member["job"],
+            'team_lab':member["team_lab"],
+            'description':member["description"],
+            'missionuser_id': member["id"]
+            }
+            team_mission.append(team_user)
+            print(" TEAM USER", team_user)
+
+        print(" TEAM MISSION", team_mission)
+
+
+        return Response(data=team_mission)
+
+    # @action(methods=["POST"], detail=False)
+    # def background_picture(self, request):
+    #     print("HEEEEELLLLLLLLOOOOOOO", request.FILES, request.FILES["file"])
+      
+    #     user = CustomUser.objects.get(id = request.user.id)
+    #     user.profile_background_image = request.FILES["file"]
+    #     user.save()
+
+    #     return Response(
+    #         {"test": user.profile_background_image.name},
+    #         status=status.HTTP_200_OK,
+    #     )

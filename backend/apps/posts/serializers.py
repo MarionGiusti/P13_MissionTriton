@@ -5,18 +5,17 @@ from apps.users.serializers import MissionUserSerializer
 from apps.missions.serializers import MissionSerializer
 
 class PostSerializer(serializers.ModelSerializer):
-    mission = MissionSerializer(many=False, read_only=True)
-    user = MissionUserSerializer(many=False, read_only=True)
+    # mission = MissionSerializer(many=False, read_only=True)
+    # user = MissionUserSerializer(many=False, read_only=True)
 
     class Meta:
         model = Post
         fields = (
             "id",
-            "user",
+            "mission_user",
             "mission",
             "title",
             "content",
-            "date",
             "created_at",
             "updated_at",
             "post_image",
@@ -26,14 +25,14 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class PictureSerializer(serializers.ModelSerializer):
-    mission = serializers.StringRelatedField(many=False, read_only=True)
-
+    # mission = serializers.StringRelatedField(many=False, read_only=True)
+    picture = serializers.ImageField()
+    
     class Meta:
         model = Picture
         fields = (
             "id",
             "mission",
             "picture",
-            "title",
             "created_at",
         )

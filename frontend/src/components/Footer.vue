@@ -9,7 +9,7 @@
         no-gutters
       >
         <v-col align="center">
-            <v-btn text
+            <v-btn text 
             v-for="(item, i) in items"
             :key="i" :to="{name: item.route}"
           >
@@ -44,22 +44,14 @@
         {
           title:"Accueil",
           route:"Home",
-          action: "",
         },
         {
           title:"Mission Triton",
-          route:"Home",
-          action: "",
-        },
-        {
-          title:"Contact",
-          route:"Home",
-          action: "",
+          route:"Triton",
         },
         {
           title:"Mentions Légales",
           route:"LegalMentions",
-          action: "",
         },
       ]
     }),
@@ -68,5 +60,9 @@
 </script>
 
 <style lang="scss" scoped>
+.btn focus{
+  box-shadow: none;
+    outline: none;
 
+}
 </style>

@@ -1,23 +1,33 @@
 <template>
   <v-main>
-    <v-container class="fill-height" fluid>
-      <v-row class="row-wrap">
-        La vie à bord ! 
-      </v-row>
+    <v-container class="d-flex flex-column background-wrap" fluid>
+      <h2>La vie à Bord !</h2>
+      <v-divider/>
+      <Post Category="Onboard" ></Post>
+
     </v-container>
   </v-main>
 </template>
 
 <script>
+// import { mapState } from 'vuex'
+import Post from '../components/Post.vue'
+
   export default {
     name: 'OnBoard',
     components: {
-    },
-
-    data () {
-      return {
-
-      }
+      Post
     },
   }
 </script>
+
+<style lang="scss" scoped>
+
+.background-wrap {
+  margin-top: 40px;
+  background-color:#54658C;
+  width: 95%;
+}
+
+
+</style>

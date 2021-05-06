@@ -1,6 +1,6 @@
 <template>
   <div class="heroBlock">
-    <v-carousel hide-delimiters cycle >
+    <v-carousel hide-delimiters>
       <v-carousel-item
         v-for="(item,i) in items"
         :key="i"
@@ -8,7 +8,7 @@
         reverse-transition="fade-transition"
         transition="fade-transition"
       >  
-        <v-row class="title-wrap" align="center" justify="center" >
+        <v-row class="title-wrap hidden-sm-and-down" align="center" justify="center" >
           <div class="title" > {{ item.title }} </div>
         </v-row>
       </v-carousel-item>
@@ -27,11 +27,11 @@
             title: "Emmenez nous à l'aventure !"
           },
           {
-            src:require("../assets/image843.png"),
+            src:require("../assets/thalassa.png"),
             title: "Partager vos campagnes en mer"
           },
           {
-            src:require("../assets/image855.png"),
+            src:require("../assets/hydrophone.png"),
             title: "Expliquer vos manoeuvres instrumentales"
           },
           {
@@ -53,11 +53,11 @@
 
   .heroBlock {
     position: relative;
-    .v-window {
-      @media only screen and (max-width: 599px) {
-        height: 220 px !important;
-      }
-    }
+    // .v-window {
+    //   @media only screen and (max-width: 599px) {
+    //     height: 220px !important;
+    //   }
+    // }
 
     // .v-image__image {
     //   &:before {

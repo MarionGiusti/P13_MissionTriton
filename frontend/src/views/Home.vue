@@ -1,37 +1,45 @@
 <template>
-<v-main>
-  <!-- <v-container fluid> -->
+<v-main >
     <HeroBlock/>
-  <!-- </v-container> -->
+    <v-container  class="missions-wrap" fluid >
+      <div class="d-flex flex-column mb-4">
+        <h2 class="text-center">Nos Missions</h2>
+        <v-divider/>
+      </div>
+    <ScrollAllMissions/>
+    </v-container>
+
 </v-main>
 </template>
 
 <script>
-// import {mapState} from 'vuex'
-// import { mapGetters } from 'vuex'
 import HeroBlock from '@/components/HeroBlock'
+import ScrollAllMissions from '@/components/ScrollAllMissions'
 
 export default {
   name: 'Home',
   components: {
     HeroBlock,
+    ScrollAllMissions,
   },
 
-  // mounted() {
-  //   this.$store
-  //     .dispatch('loadMissionList')
-  //     .catch(err => {
-  //       console.log(err)
-  //     });
-  // },
-  // computed: {
-  //   ...mapState([
-  //     'allMissions'
-  //   ])
-  // },
+  async mounted() {
+    await this.$store
+      .dispatch('loadMissionList')
+      .catch(err => {
+        console.log(err)
+      });
+  },
+
+  
 }
 </script>
 
 <style lang="scss" scoped>
+.missions-wrap {
+  margin-top: 40px;
+  background-color:#54658C;
+  width: 95%;
+}
 
 </style>

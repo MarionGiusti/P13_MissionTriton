@@ -41,6 +41,8 @@
                   readonly
                   v-bind="attrs"
                   v-on="on"
+                  required
+                  :rules="[v => !!v || 'Item is required']"
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -64,6 +66,8 @@
                   readonly
                   v-bind="attrs"
                   v-on="on"
+                  required
+                  :rules="dateRules"
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -79,7 +83,7 @@
           @click="addMission(form)"
         >Ajouter</v-btn>
       </div>
-       <AddMissionuser/>
+       <!-- <AddMissionuser/> -->
 
     </v-container>
   </v-main>
@@ -87,12 +91,12 @@
 
 <script>
 // import { mapActions } from 'vuex'
-import AddMissionuser from '@/components/AddMissionuser'
+// import AddMissionuser from '@/components/AddMissionuser'
 
 export default {
   name: 'AddMission',
   components: {
-    AddMissionuser,
+    // AddMissionuser,
   },
 
  data () {
@@ -106,7 +110,11 @@ export default {
           ship:"",
           start_date:"",
           end_date:"",
-        }
+        },
+        dateRules: [
+          v => !!v ,
+          v => (v && v > this.form.start_date) || 'Date de fin avant date début',
+        ],
     }
   },
 
@@ -120,12 +128,19 @@ export default {
           .then(() => console.log('addMission ok'))
           // .then(() => this.$router.push('/'))
           .then(() => alert(`La mission: ${name} a bien été enregistrée !`))
+          .then(() => this.resetForm())
+          .then(() => this.$store.dispatch('loadMissionList'))
           .catch(err => {
             console.log(err)
           });
       }
-    }
+    },
+    resetForm(){
+      this.$refs.form.reset()
+    },
   },
+
+  
 }
 </script>
 

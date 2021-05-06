@@ -15,13 +15,12 @@ class CustomUser(AbstractUser):
     researchgate_link = models.URLField(null=True, blank=True)
     missions = models.ManyToManyField(Mission, through='MissionUser')
 
-
 class MissionUser(models.Model):
-    user = models.ForeignKey(get_user_model(), null=False, on_delete=models.PROTECT, related_name="missionusers")
+    user = models.ForeignKey(get_user_model(), null=False, on_delete=models.CASCADE, related_name="missionusers")
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE, related_name="missionusers")
-    job = models.CharField(max_length=150, null=True, blank=True)
-    team_lab = models.CharField(max_length=200, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
+    job = models.CharField(max_length=150, default="", blank=True)
+    team_lab = models.CharField(max_length=200, default="", blank=True)
+    description = models.TextField(default="", blank=True)
 
     class Meta:
         unique_together = ['user', 'mission']

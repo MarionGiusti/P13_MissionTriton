@@ -2,59 +2,73 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { getAPI } from '../axios-api'
 
-import { getField, updateField } from 'vuex-map-fields';
+// import { getField, updateField } from 'vuex-map-fields';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token') || null,
-    user_id: localStorage.getItem('user_id') || null,
+    userId: localStorage.getItem('userId') || null,
     userDetails: {},
-    // missionList: [] ,
     missions: [],
-    // allMissions: [],
-    // missionDetails: {},
-    // "id_mission": null
     missionUserDetails: {},
+    // currentMissionDetails: {},
+    shipPositionsDetails: {},
+    scheduleUserDetails: {},
+    postActu: {},
+    postMedBoard: {},
+    // postBoard: {},
   },
 
   getters: {
-    getField,
+    // getField,
     currentMission: (state) => (id) => {
-      return state.missions.find(missions => missions.id === id)
-    }
+      // console.log(JSON.stringify(state.missions))
+      return state.missions.find(missions => missions.id === parseInt(id))
+    },
+    futureMissions: (state)=> {
+      return state.missions.filter(
+        missions => new Date(missions.start_date).getTime() > new Date().getTime()
+        ).slice().sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
+    },
+    nowMissions: (state)=> {
+      return state.missions.filter(
+        missions => new Date(missions.start_date).getTime() <= new Date().getTime() &&
+      new Date(missions.end_date).getTime() >= new Date().getTime()
+      ).slice().sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
+    },
+    pastMissions: (state)=> {
+      return state.missions.filter(
+        missions => new Date(missions.end_date).getTime() < new Date().getTime()
+      ).slice().sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
+    },
   },
 
   mutations: {
-    updateField,
+    // updateField,
 
-    SetTokenId(state, data) {
+    setTokenId(state, data) {
       state.token = data.token
-      state.user_id = data.user_id
+      state.userId = data.user_id
     },
 
     setUserDetails(state, userDetails) {
       state.userDetails = userDetails
     },
 
-    updateUserDetails(state, values) {
-      state.userDetails = Object.assign({}, state.userDetails, values);
+    updateUserDetails(state, data) {
+      state.userDetails = Object.assign({}, state.userDetails, data);
     },
-   
-    // setMissionList(state, missList) {
-    //   state.missionList = missList
-    //   console.log('setMissionList mutation:', missList)
-    // },
 
     setMissions(state, allMissions) {
       state.missions = allMissions
-      console.log('setMissions mutation:', allMissions)
+      // console.log('setMissions mutation:', allMissions)
     },
 
-    // setMissionDetails(state, missionDetails){
-    //   state.missionDetails = missionDetails
-    //   console.log('setmissionDetails mutation:', missionDetails)
+    // setCurrentMissionDetails(state, data) {
+    //   state.currentMissionDetails = data
+    //   console.log('setcurrentMissionDetails mutation:', data)
     // },
     
     updateMissionList(data) {
@@ -63,11 +77,42 @@ export default new Vuex.Store({
 
     setMissionuser(state, missionUserDetails) {
       state.missionUserDetails = missionUserDetails
-      console.log('setMissionuser mutation:', missionUserDetails)
+      // console.log('setMissionuser mutation:', missionUserDetails)
     },
 
-    updateMissionUserDetails(state, values) {
-      state.missionUserDetails = Object.assign({}, state.missionUserDetails, values);
+    updateMissionUserDetails(state, data) {
+      state.missionUserDetails = Object.assign({}, state.missionUserDetails, data);
+    },
+
+    // setTimelines(timelinesDetails) {
+    //   console.log('setTimelines mutation:', timelinesDetails)
+    // },
+
+    setShipPositions(state, shipPositionsDetails) {
+      state.shipPositionsDetails = shipPositionsDetails
+      // console.log('setShipPositions mutation:', shipPositionsDetails)
+    },
+
+    setScheduleUser(state, data) {
+      state.scheduleUserDetails = data
+      // console.log('setScheduleUser mutation:', data)
+    },
+
+    setPostActu(state, data) {
+      state.postActu = data
+      // console.log('setPostActu mutation:', data)
+    },
+
+    // setPostMed(state, data) {
+    //   state.postMed = data
+    // },
+
+    setPostMedBoard(state, data) {
+      state.postMedBoard = data
+    },
+
+    updatePostActu(state, data) {
+      state.postActu = Object.assign({}, state.postActu, data);
     },
   
   },
@@ -79,51 +124,55 @@ export default new Vuex.Store({
             password: usercredentials.password
           })
         localStorage.setItem('token', data.token)
-        localStorage.setItem('user_id', data.user_id)
-        console.log("action userLogin, dataToken:", data)
-        commit('SetTokenId', data)
+        localStorage.setItem('userId', data.user_id)
+        // console.log("action userLogin, dataToken:", data)
+        commit('setTokenId', data)
     },
 
     async userRegister({ commit }, usercredentials) {
-      const { data } = await getAPI.post('/api/users/', {
-          username: usercredentials.username,
-          first_name: usercredentials.firstname,
-          last_name: usercredentials.lastname,
-          password: usercredentials.password1,
-          email: usercredentials.email,
-        })
-        commit('SetTokenId', data )
+      // const { data } = await getAPI.post('/api/users/', {
+      //     username: usercredentials.username,
+      //     first_name: usercredentials.firstname,
+      //     last_name: usercredentials.lastname,
+      //     password: usercredentials.password1,
+      //     email: usercredentials.email,
+      //   })
+      //   commit('setTokenId', data )
+      const { data } = await getAPI.post('/dj-rest-auth/registration/', {
+            username: usercredentials.username,
+            password1: usercredentials.password1,
+            password2: usercredentials.password2,
+            email: usercredentials.email,
+          })
+          commit('setTokenId', data )
+
     },
 
-    async missionRegister ({ commit }, missioncredentials) {
+    async missionRegister ({ commit, state }, missioncredentials) {
       const { data } = await getAPI.post('/api/missions/', {
           name: missioncredentials.name,
           ship_name: missioncredentials.ship,
           start_date: missioncredentials.start_date,
           end_date: missioncredentials.end_date,
-        })
-        console.log('action missionRegister:', data)
+        }, {
+          headers: { 'Authorization': 'Token ' + state.token,}})
+        // console.log('action missionRegister:', data)
         commit('updateMissionList', data)
     },
 
-    // userLogout({ commit }, token ) {
-    //   token = null
-    //   commit('updateToken', token)
-    // },
-
     userLogout({ commit }) {
       const data  =  {
-        user_id: null,
+        userId: null,
         token: null
       }
       localStorage.removeItem('token')
-      localStorage.removeItem('user_id')
-      console.log("action userLogout, logoutData:", data)
-      commit('SetTokenId', data)
+      localStorage.removeItem('userId')
+      // console.log("action userLogout, logoutData:", data)
+      commit('setTokenId', data)
     },
 
     async patchUserProfile({ commit, state }, usercredentials) {
-      const { data } = await getAPI.patch('api/users/' + state.user_id + '/', {
+        const { data } = await getAPI.patch(`api/users/${state.userId}/`, {
           username: usercredentials.username,
           first_name: usercredentials.first_name,
           last_name: usercredentials.last_name,
@@ -132,14 +181,14 @@ export default new Vuex.Store({
           researchgate_link: usercredentials.researchgate_link,
         }, {
         headers: { 'Authorization': 'Token ' + state.token,}})
-        console.log("action patchUserProfile:", data)
+        // console.log("action patchUserProfile:", data)
         commit('updateUserDetails', data)
     },
 
-    loadUserDetails({ commit, state }) {
-      getAPI.get('api/users/' + state.user_id + '/')
+    async getUserDetails({ commit, state }) {
+      await getAPI.get(`api/users/${state.userId}`)
       .then(data => {
-        console.log('action loadUserDetails:', data)
+        // console.log('action getUserDetails:', data)
         let userDetails = data.data
         commit('setUserDetails', userDetails)
       })
@@ -147,20 +196,11 @@ export default new Vuex.Store({
         console.log(error)
       })
     },
-   
+
+    // Beginning to get list in the search icon
     async loadMissionList({ commit }) {
       await getAPI.get('/api/missions/')
       .then(data => {
-        // // console.log('action loadMissionList:', data)
-        // let allMissions = data.data;
-        // let missList = [];
-        // // console.log('allMissions:', allMissions)
-        // allMissions.forEach((mission) => {
-        //   missList.push({"id":mission.id, "name":mission.name})
-        //   // console.log('miss', mission)
-        // })
-        // // console.log('missList:',missList)
-        // commit('setMissionList', missList)
         commit('setMissions', data.data)
       })
       .catch(error => {
@@ -168,14 +208,13 @@ export default new Vuex.Store({
       })
     },
 
-  
-    async get_listmissionusers({commit, state}, missionId) {
-      // await getAPI.get('/api/users/missionusers/?missionid=1',
-      await getAPI.get('/api/users/missionusers/' + missionId + '/',
+    // Account page to get mission user of one user and one mission
+    async getListMissionUsers({commit, state}, missionId) {
+      await getAPI.get(`/api/users/missionusers/?missionid=${missionId}`,
         {headers: { 'Authorization': 'Token ' + state.token }})
       .then(data => {
-        console.log('get_listmissionusers action', data.data)
-        commit('setMissionuser', data.data)})
+        // console.log('getListMissionUsers action', data.data)
+        commit('setMissionuser', data.data[0])})
       .catch(error => {
         console.log(error)
         commit('setMissionuser', {})
@@ -183,28 +222,103 @@ export default new Vuex.Store({
     },
 
     async patchMissionUserProfile({ commit, state }, missionusercredentials) {
-      const { data } = await getAPI.patch('api/users/missionusers/' + state.missionUserDetails.id + '/', {
+        const { data } = await getAPI.patch(`api/users/missionusers/${state.missionUserDetails.id}/`, {         
           job: missionusercredentials.job,
           team_lab: missionusercredentials.team_lab,
           description: missionusercredentials.description,
         }, {
         headers: { 'Authorization': 'Token ' + state.token,}})
-        console.log("action patchMissionUserProfile:", data)
+        // console.log("action patchMissionUserProfile:", data)
         commit('updateMissionUserDetails', data)
     },
 
-    // async loadMissionDetails({ commit }, missionID) {
-    //   console.log('CHALALA', missionID)
-    //   await getAPI.get('/api/missions/' + missionID + '/')
+    // async getTimelinesMission({commit}, missionId) {
+    //   await getAPI.get(`/api/missions/timelines/?missionid=${missionId}`)
     //   .then(data => {
-    //     console.log('action loadmissionDetails:', data.data)
-    //     let missionDetails = data.data
-    //     commit('setMissionDetails', missionDetails)
-    //   })
+    //     // console.log('getTimelinesMission action', data.data)
+    //     commit('setTimelines', data.data)})
     //   .catch(error => {
     //     console.log(error)
     //   })
     // },
+
+    async getShipPositionsMission({commit}, missionId) {
+      await getAPI.get(`/api/missions/shippositions/?missionid=${missionId}`)
+      .then(data => {
+        // console.log('getShipPositionsMission action', data.data)
+        commit('setShipPositions', data.data)})
+      .catch(error => {
+        console.log(error)
+      })
+    },
+
+    async getScheduleUser({commit, state}) {
+      await getAPI.get(`/api/schedules/`, {
+        headers: { 'Authorization': 'Token ' + state.token,
+      }})
+      .then(data => {
+        // console.log('getScheduleUser', data.data)
+        commit('setScheduleUser', data.data)})
+      .catch(error => {
+        console.log(error)
+      })
+    },
+
+    async getPost({commit}, params) {
+      await getAPI.get(`/api/posts/`, {params:params})
+      .then(data => {
+        console.log('getPost', data.data)
+        if (params["category"] == 'Actu') {
+          commit('setPostActu', data.data)
+          console.log('ACTU', params["category"])
+
+        }
+        // else if (params["category"] == 'Med') {
+        //   commit('setPostMed', data.data)
+        //   console.log('MED', params["category"])
+
+        // }
+        // else if (params["category"] == 'Onboard') {
+        //   commit('setPostBoard', data.data)
+        //   console.log('BOARD', params["category"])
+        // }
+        else {
+          commit('setPostMedBoard', data.data)
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
+
+    async postPost({ commit, state }, postcredentials) {
+      const { data } = await getAPI.post('/api/posts/', 
+      postcredentials,
+      {
+        headers: { 
+          'Authorization': 'Token ' + state.token,
+          'Content-Type': 'application/json',   
+        }
+      })
+      commit('updatePostActu', data)
+    },
+
+    async patchPost({ commit, state }, postcredentials) {
+      const { data } = await getAPI.patch(`api/posts/${postcredentials.id}/`, {         
+        title: postcredentials.title,
+        content: postcredentials.content,
+        video_url: postcredentials.video_url,
+      }, {
+      headers: { 'Authorization': 'Token ' + state.token,}})
+      // console.log("action patchMissionUserProfile:", data)
+      commit('updatePostActu', data)
+    },
+
+    async removePost({state}, postId) {
+      await getAPI.delete(`/api/posts/${postId}/`, {
+        headers: { 'Authorization': 'Token ' + state.token,}
+      })
+    },
 
   },
 

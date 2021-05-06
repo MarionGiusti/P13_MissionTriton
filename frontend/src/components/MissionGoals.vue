@@ -2,48 +2,211 @@
   <v-container>
     <!-- <h2 class="text-center">Notre mission</h2>
     <v-divider/> -->
+    <div class="mx-8">
 
-     <v-card
-    class="mx-auto"
-    flat
-  >
-    <v-img
-      class="white--text align-end"
-      height="200px"
-      src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-    >
-      <v-card-title>BUBBLE2022</v-card-title>
-    </v-img>
+      <v-card
+        class="mx-auto post-wrap"
+        flat
+      >
+        <v-img
+          class="white--text align-end"
+          height="200px"
+          src= "../assets/compass.jpg"
+        >
+          <v-card-title class="black--text card-title"><v-spacer></v-spacer>
+            <div>
+              <h4>Navire : {{ missionD.ship_name }} <br/>
+              Du {{ missionD.start_date }} au {{ missionD.end_date }}</h4>
+            </div>
+          </v-card-title>
+        </v-img>
+        
+        <v-card-text class="post-wrap">
+          <v-row>
+            <v-col>
+              <div class="text-end">
+                <v-btn
+                  class="mb-4" 
+                  icon
+                  outlined
+                  color="#54658C"
+                  @click="dialog=true"
+                >
+                  <v-icon>
+                    mdi-grease-pencil
+                  </v-icon>
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+          {{ missionD.description }}
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
 
-    <v-card-subtitle class="pb-0">
-      Number 10
-    </v-card-subtitle>
+    <!-- dialog -->
+      <div class="text-center">
+        <v-dialog
+          v-model="dialog"
+          max-width="800"
+        >
+          <v-card>
+            <v-container>            
+            <v-form 
+              ref="form"
+              v-model="valid"
+              lazy-validation
+              @submit.prevent="updateMission"
+              >
+                <v-text-field
+                  label="Nom de la mission"
+                  prepend-icon="mdi-radiobox-marked"
+                  type="text"
+                  color="teal"
+                  v-model="missionD.name"
+                  required
+                  :rules="[v => !!v || 'Item is required']"
+                />
+                <v-text-field
+                  label="Nom du navire"
+                  prepend-icon="mdi-duck"
+                  type="text"
+                  color="teal"
+                  v-model="missionD.ship_name"
+                  required
+                  :rules="[v => !!v || 'Item is required']"
+                />
+                <v-menu
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="missionD.start_date"
+                      label="Date de début"
+                      prepend-icon="mdi-clock-start"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      required
+                      :rules="[v => !!v || 'Item is required']"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="missionD.start_date"
+                    @input="menu1 = false"
+                  ></v-date-picker>
+                </v-menu>
+                <v-menu
+                  v-model="menu2"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="missionD.end_date"
+                      label="Date de fin"
+                      prepend-icon="mdi-clock-end"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      required
+                      :rules="dateRules"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="missionD.end_date"
+                    @input="menu2 = false"
+                  ></v-date-picker>
+                </v-menu>
+                <v-textarea
+                label="Decription"
+                type="text"
+                color="teal"
+                required
+                v-model="missionD.description"
+              ></v-textarea>
+            </v-form>
 
-    <v-card-text class="text--primary">
-      <div>Whitehaven Beach</div>
-
-      <div>Whitsunday Island, Whitsunday Islands</div>
-    </v-card-text>
-    <v-card-subtitle class="pb-0">
-      Number 10
-    </v-card-subtitle>
-
-  </v-card>
+            <v-btn 
+              text
+              @click.stop="dialog=false"
+              @click="updateMission(missionD)"
+              :disabled="!valid"
+            >
+              Modifier
+            </v-btn>
+            </v-container>
+            </v-card>
+        </v-dialog>
+      </div>
+    </div>
   </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { getAPI } from '../axios-api'
+
   export default {
     name: 'MissionGoals',
     data() {
       return {
-        
+        menu1: false,
+        menu2: false,
+        dialog: false,
+        valid: false,
+        dateRules: [
+          v => !!v ,
+          v => (v && v > this.missionD.start_date) || 'Date de fin avant date début',
+        ],
+
       }
-    } 
+    },
+    
+    computed: {
+      ...mapGetters([ 'currentMission' ]),
+      missionD() {
+        return this.currentMission(this.$route.params.id)
+      },
+    },
+
+    methods:{
+      async updateMission(missioncredentials) {
+        console.log('UPDATE MISSION', missioncredentials)
+        await getAPI.patch(`api/missions/${missioncredentials.id}/`, {         
+            name: missioncredentials.name,
+            ship_name: missioncredentials.ship,
+            start_date: missioncredentials.start_date,
+            end_date: missioncredentials.end_date,
+            description: missioncredentials.description,
+        }, {
+        headers: { 'Authorization': 'Token ' + this.$store.state.token }})
+      },
+      
+    }
+
   }
 
 </script>
 
 <style lang="scss" scoped>
+  .post-wrap {
+    background-color:#A3B3D5;
+  }
 
+  // .card-title {
+  //   font-family: 'Dosis';
+  //   font-weight: 500;
+  // }
 </style>

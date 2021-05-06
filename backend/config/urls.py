@@ -17,5 +17,7 @@ urlpatterns = [
     path('api/schedules/', include('apps.schedules.urls')),
     # path('api-token-auth/', views.obtain_auth_token),
     path('api-token-auth/', CustomAuthToken.as_view()),
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
 
 ] + static(settings.STATIC_URL) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

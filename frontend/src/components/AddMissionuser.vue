@@ -49,7 +49,8 @@ export default {
         form: {
           mission:"",
           email:"",
-        }
+        },
+        
     }
   },
 
@@ -67,9 +68,13 @@ export default {
           }
           })
         .then(() => console.log('addMissionuser ok', this.form))
-        .then(() => alert("L'utilisateur:"+ email + " a bien été enregistré !"))
+        .then(() => alert( `L'utilisateur ${email} a bien été ajouté à la mission ${mission} !` ))
+        .then(() => this.resetForm())
         .catch(err => {console.log(err)}); 
       }
+    },
+    resetForm() {
+      this.$refs.form.reset()
     },
   },
 }

@@ -4,7 +4,6 @@ from .models import CustomUser, MissionUser
 
 class UserSerializer(serializers.ModelSerializer):
     # missionusers = serializers.StringRelatedField(many=True)
-
     class Meta:
         model = CustomUser
         # fields = "__all__"
@@ -22,11 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
             # "missionusers"
         )
         extra_kwargs = {"password":{"write_only":True,"required":True}}
-        # depth show details of missions
         depth = 1
 
 class MissionUserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MissionUser
         fields = (

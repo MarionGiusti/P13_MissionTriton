@@ -1,61 +1,290 @@
 <template>
   <v-container>
-    <v-subheader>
-        Objectif du jour
-      </v-subheader>
-    <v-card>    
-      <!-- <v-card-title>
-        Objectif du jour
-      </v-card-title> -->
-      <v-row>
-        <!-- <v-col cols=>
-        <v-img
-      height="250"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-    ></v-img>
-        </v-col> -->
-        <v-col>
-          Blabla
+    <div class="mx-8">
+        <v-btn
+          color="#198F8F"
+          class="mb-2 mt-4"
+          @click="dialog = true "
+        >
+          Nouveau post {{Category}}
+        </v-btn>
+      
+      <v-row class="mt-4" >
+        <v-col  v-for="item in postMedBoard" :key="item.id" cols="12" align="center" class="mb-4">
+
+          <v-card class="post-wrap" flat>    
+            <v-card-title >
+              <h3>{{ item.title }}</h3>
+              <v-spacer></v-spacer>
+              <i>
+              {{ 
+                new Date(item.created_at).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+              }}
+              </i>
+
+              <v-btn
+                class="ml-6 mr-4" 
+                icon
+                outlined
+                @click="selectItem(item); dialog_update=true"
+              >
+                <v-icon> mdi-grease-pencil </v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-divider class="mx-8"></v-divider>
+            <v-card-text>
+              <v-img v-if="item.post_image !==null" contain max-width="800px" :src= "`http://127.0.0.1:8000${item.post_image}`" ></v-img>
+              <br/>
+              {{ item.content }}
+              <br/>
+              <embed 
+                v-if="item.video_url!==null" 
+                class="mt-4 embed-responsive" 
+                :src= "`${item.video_url}`"
+                max-width="700" 
+                max-height="500"
+              >
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
 
-    </v-card>
+      <!-- Add post dialog -->
+      <div class="text-center">
+        <v-dialog
+          v-model="dialog"
+          max-width="800"
+        >
+          <v-card>
+            <v-container>
+            <v-form ref="form"  v-model="valid" @submit.prevent="addPost">
+              <v-text-field
+                label="Titre"
+                type="text"
+                color="teal"
+                v-model="send_form.form.title"
+                :counter="100"
+                required
+                :rules="[v => !!v || 'Item is required']"
+              />
+              <v-textarea
+                label="Détails"
+                type="text"
+                color="teal"
+                v-model="send_form.form.content"
+                required
+                :rules="[v => !!v || 'Item is required']"
+              ></v-textarea>
+              <v-file-input
+                accept="image/*"
+                prepend-icon="mdi-camera"
+                label="Image"
+                @change="onFileSelected($event)"
+              ></v-file-input>
+              <v-text-field
+                label="Embed Url vidéo youtube "
+                type="text"
+                color="teal"
+                v-model="send_form.form.video_url"
+              />
+            </v-form>
+            <v-btn 
+              type="submit"
+              color="teal"
+              class="mr-40"
+              @click.stop="dialog=false"
+              @click="addPost"
+            >
+              Créer
+            </v-btn>
+            </v-container>
+            </v-card>
+        </v-dialog>
+      </div>
 
-
-    <v-subheader>
-        Evènement du jour
-        
-      </v-subheader>
-    <v-card>    
-      <!-- <v-card-title>
-        Objectif du jour
-      </v-card-title> -->
-      <v-row>
-        <v-col cols="4">
-        <v-img
-      height="250"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-    ></v-img>
-        </v-col>
-        <v-col>
-          Blabla
-        </v-col>
-      </v-row>
-
-    </v-card>
+      <!-- Edit post dialog_update -->
+      <div class="text-center">
+        <v-dialog
+          v-model="dialog_update"
+          max-width="800"
+        >
+          <v-card>
+            <v-container>
+            <v-form ref="form_update" v-model="valid" @submit.prevent="updatePost">
+              <v-text-field
+                label="Titre"
+                type="text"
+                color="teal"
+                v-model="selectedItem.title"
+                required
+                :rules="[v => !!v || 'Item is required']"
+                :counter="100"
+              />
+              <v-textarea
+                label="Détails"
+                type="text"
+                color="teal"
+                v-model="selectedItem.content"
+                required
+                :rules="[v => !!v || 'Item is required']"
+              ></v-textarea>
+              <v-file-input
+                accept="image/*"
+                prepend-icon="mdi-camera"
+                label="Image"
+                v-model="selectedItem.post_image"
+                @change="onFileSelected($event)"
+              ></v-file-input>
+              <v-text-field
+                label="Embed Url vidéo youtube "
+                type="text"
+                color="teal"
+                v-model="selectedItem.video_url"
+              />
+            </v-form>
+            <v-btn 
+              text
+              @click.stop="dialog_update=false"
+              @click="updatePost(selectedItem)"
+            >
+              Modifier
+            </v-btn>
+            <v-btn 
+              text
+              @click.stop="dialog_update=false"
+              @click="deletePost(selectedItem.id)"
+            >
+              Supprimer
+            </v-btn>
+            </v-container>
+            </v-card>
+        </v-dialog>
+      </div>
+    </div>
   </v-container>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+import { getAPI } from '../axios-api'
+
   export default {
     name: 'Post',
-    data: () => ({
-      
-    }),
-  }
 
+    props: ['Category'],
+
+    data () {
+      return {
+        dialog: false,
+        dialog_update: false,
+        valid:false,
+        send_form: {
+          form: {
+            title:"",
+            content:"",
+            video_url: "",
+          },
+          missionId: this.$route.params.id,
+          category: this.Category
+        },
+        params: {
+          missionId: this.$route.params.id,
+          category: this.Category
+        },
+        selectedItem: {},
+      }
+    },
+
+    async mounted(){
+      await this.loadPost(this.params)
+    },
+
+    computed: {
+      ...mapState(['postMedBoard']),
+    
+    },
+
+    methods: {
+      async loadPost(params){
+        await this.$store.dispatch('getPost', params)
+        .then(() => console.log('postmed ok'))
+        .catch(err => {console.log(err)})
+      },
+
+      onFileSelected(event) {
+        this.selectedFile = event
+      },
+      async onUpload(postId) {
+        const fd = new FormData();
+        fd.append('file', this.selectedFile, this.selectedFile.name)
+        console.log('ON UPlOAD FILE', fd)
+        if (postId !== 0) {
+          await getAPI.post(`/api/posts/update_post_picture/${postId}/`, 
+          fd, {
+          headers: { 
+            'Authorization': 'Token ' + this.$store.state.token,
+            'Content-Type': 'multipart/form-data',   
+          }
+          })
+          this.loadPost(this.params)
+        }
+        else {
+          await getAPI.post('/api/posts/post_picture/', 
+            fd, {
+            headers: { 
+              'Authorization': 'Token ' + this.$store.state.token,
+              'Content-Type': 'multipart/form-data',   
+            }
+          })
+        }
+      },
+
+      ...mapActions(['postPost']),
+      async addPost(){
+        console.log('ADD POST', this.params)
+        if (this.$refs.form.validate()) {
+          await this.postPost(this.send_form)
+          if (this.selectedFile) {
+            await this.onUpload(0)
+          }       
+          this.loadPost(this.params)
+        }
+      },
+
+      ...mapActions(['patchPost']),
+      async updatePost() {
+        console.log(this.valid)
+        if (this.$refs.form_update.validate()) {
+          console.log(this.valid)
+          await this.patchPost(this.selectedItem)
+            .then(() => console.log('method patch mission user ok'))
+            .catch(err => {console.log(err)});
+
+          if (this.selectedFile) {
+            await this.onUpload(this.selectedItem.id)
+          }
+        }
+        console.log('UPDATE SELECTED ITEM', this.selectedItem)
+        this.loadPost(this.params)
+      },
+
+      ...mapActions(['removePost']),
+      async deletePost(id){
+        await this.removePost(id)
+        this.loadPost(this.params)
+      },
+
+      selectItem(item){
+        this.selectedItem = item
+      },
+    }
+
+  }
 </script>
 
-<style lang="scss" scoped>
 
+<style lang="scss" scoped>
+.post-wrap {
+  background-color:#A3B3D5;
+}
 </style>

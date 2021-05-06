@@ -2,13 +2,19 @@
   <v-main>
     <v-container class="d-flex flex-column background-wrap" fluid>
       Agenda
+      <Calendar/>
     </v-container>
   </v-main>
 </template>
 
 <script>
+import Calendar from '@/components/Calendar'
+
   export default {
     name: 'Schedule',
+    components: {
+      Calendar,
+    },
     data() {
       return {
 

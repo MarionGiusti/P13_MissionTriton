@@ -1,23 +1,35 @@
 <template>
   <v-main>
-    <v-container class="fill-height" fluid>
-      <v-row class="row-wrap">
-        Conf, posters..
-      </v-row>
+    <v-container class="d-flex flex-column background-wrap" fluid>
+      <h2>Médiation</h2>
+      <v-divider/>
+      <Post Category="Med" ></Post>
+
     </v-container>
   </v-main>
 </template>
 
 <script>
+// import { mapState, mapActions } from 'vuex'
+// import { getAPI } from '../axios-api'
+import Post from '../components/Post.vue'
+
   export default {
     name: 'Mediation',
     components: {
-    },
-
-    data () {
-      return {
-
-      }
+      Post
     },
   }
 </script>
+
+
+<style lang="scss" scoped>
+
+.background-wrap {
+  margin-top: 40px;
+  background-color:#54658C;
+  width: 95%;
+}
+
+
+</style>

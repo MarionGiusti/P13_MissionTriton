@@ -2,40 +2,35 @@
   <v-main>
     <div class="d-flex flex-column ">
       <v-hover>
-          <template v-slot:default="{ hover }">
-      <div class="top-back">
-        
+        <template v-slot:default="{ hover }">
+          <div class="top-back">
             <v-img
               height="300px"
               :src= userDetails.profile_background_image>
               <v-fade-transition>
-                  <v-overlay
-                    v-if="hover"
-                    absolute
-                    color="#8c9297"
+                <v-overlay
+                  v-if="hover"
+                  absolute
+                  color="#8c9297"
+                >
+                  <v-btn
+                    icon
+                    fab
+                    outlined
+                    @click="$refs.inputUpload.click()"    
                   >
-                    <v-btn
-                    :color="transparent"
-                      icon
-                      fab
-                      outlined
-                      @click="$refs.inputUpload.click()"    
+                    <v-icon
                     >
-                      <v-icon
-                      :color="transparent"
-                      >
-                      mdi-camera
-                      </v-icon>
-                    </v-btn>
-                    <input type="file" v-show="false" ref="inputUpload" @change="onFileSelected($event, 1)">
-                  </v-overlay>
-                </v-fade-transition>
+                    mdi-camera
+                    </v-icon>
+                  </v-btn>
+                  <input type="file" v-show="false" ref="inputUpload" @change="onFileSelected($event, 1)">
+                </v-overlay>
+              </v-fade-transition>
             </v-img>
-            
-            
-      </div>
-      </template>
-        </v-hover>
+          </div>
+        </template>
+      </v-hover>
       <div class="bottom-back">
         <v-hover>
           <template v-slot:default="{ hover }">
@@ -51,29 +46,28 @@
                 tile
                 :class="{ 'on-hover': hover }"
               >
-                <v-img :src= userDetails.profile_image ></v-img>
-                <v-fade-transition>
-                  <v-overlay
-                    v-if="hover"
-                    absolute
-                    color="#8c9297"
-                  >
-                    <v-btn
-                    :color="transparent"
-                      icon
-                      fab
-                      outlined
-                      @click="$refs.inputUpload.click()"
+                <v-img :src= userDetails.profile_image >
+                  <v-fade-transition>
+                    <v-overlay
+                      v-if="hover"
+                      absolute
+                      color="#8c9297"
                     >
-                      <v-icon
-                      :color="transparent"
+                      <v-btn
+                        icon
+                        fab
+                        outlined
+                        @click="$refs.inputUpload.click()"
                       >
-                      mdi-camera
-                      </v-icon>
-                    </v-btn>
-                    <input type="file" v-show="false" ref="inputUpload" @change="onFileSelected($event, 0)">
-                  </v-overlay>
-                </v-fade-transition>
+                        <v-icon
+                        >
+                        mdi-camera
+                        </v-icon>
+                      </v-btn>
+                      <input type="file" v-show="false" ref="inputUpload" @change="onFileSelected($event, 0)">
+                    </v-overlay>
+                  </v-fade-transition>
+                </v-img>
               </v-avatar>
             </v-sheet>
           </template>
@@ -109,8 +103,6 @@
                     type="text"
                     color="teal"
                     v-model="userDetails.first_name"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
                     :value="userDetails.first_name"
                   />
                   <v-text-field
@@ -119,8 +111,6 @@
                     type="text"
                     color="teal"
                     v-model="userDetails.last_name"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
                     :value="userDetails.last_name"
                   />
                   <v-text-field
@@ -139,8 +129,6 @@
                     type="text"
                     color="teal"
                     v-model="userDetails.linkedin_link"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
                     :value="userDetails.linkedin_link"
                   />
                   <v-text-field
@@ -149,8 +137,6 @@
                     type="email"
                     color="teal"
                     v-model="userDetails.researchgate_link"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
                     :value="userDetails.researchgate_link"
                   />
 
@@ -163,18 +149,17 @@
           </div>
         </div>
       </div>
-      <div class="d-flex flex-row">
+      <div class="d-flex flex-row" v-if="userDetails.missions.length != 0">
         <div class="d-flex flex-column row-wrap-mission">
           <div class="mb-4">
-            <h2 class="text-center">Missions</h2>
+            <h2 class="text-center">Missions </h2>
             <v-divider/>
           </div>
           
-          <div class="d-flex flex-row justify-space-between">
+          <div class="d-flex flex-row flex-wrap justify-space-between" >
             <div class="">
               <v-card class="card-mission" color="#2AC9B2">
                 <v-card-text>
-
                   <v-list-item-group
                     color="#002D26"
                   >
@@ -187,14 +172,13 @@
                       </v-list-item-content>
                     </v-list-item>
                   </v-list-item-group>
-                  
                 </v-card-text>
               </v-card>
             </div>
+
             <div class="" v-if="card_mission">
               <v-card class="card-mission-details" color="#8AEEDF">
                 <v-card-text>
-
                   <v-form class="form-login" ref="formMission" v-model="valid">
                   <v-text-field
                     label= "Job"
@@ -202,6 +186,7 @@
                     color="teal"
                     v-model="missionUserDetails.job"
                     :value="missionUserDetails.job"
+                    :counter="150"
                   />
                   <v-text-field
                     label="Laboratoire"
@@ -209,6 +194,8 @@
                     color="teal"
                     v-model="missionUserDetails.team_lab"
                     :value="missionUserDetails.team_lab"
+                    :counter="200"
+
                   />
                   <v-textarea
                     label="Description"
@@ -227,8 +214,6 @@
               </v-card>
             </div>
           </div>
-
-
         </div>
       </div>
     </v-container>
@@ -239,7 +224,7 @@
 import {mapState} from 'vuex'
 import { mapActions } from 'vuex'
 
-import { mapFields } from 'vuex-map-fields'
+// import { mapFields } from 'vuex-map-fields'
 import { getAPI } from '../axios-api'
 
 export default {
@@ -258,15 +243,15 @@ export default {
   
   mounted() {
     this.$store
-      .dispatch('loadUserDetails')
+      .dispatch('getUserDetails')
       .catch(err => {console.log(err)});
   },
   
   computed: {
-    ...mapFields([
-      'userDetails',
-      'missionUserDetails'
-    ]),
+    // ...mapFields([
+    //   'userDetails',
+    //   'missionUserDetails'
+    // ]),
     ...mapState([
       'userDetails',
       'missionUserDetails'
@@ -291,7 +276,7 @@ export default {
         this.onUpload()
       } else {
         this.onUploadBackground()
-  }
+      }
     },
     onUpload() {
       const fd = new FormData();
@@ -304,7 +289,7 @@ export default {
       }
       })
       .then(() => console.log('patch image ok', fd))
-      .then(() => this.$store.dispatch('loadUserDetails'))
+      .then(() => this.$store.dispatch('getUserDetails'))
       .catch(err => {console.log(err)});
     },
     onUploadBackground() {
@@ -318,11 +303,9 @@ export default {
       }
       })
       .then(() => console.log('patch background image ok', fd))
-      .then(() => this.$store.dispatch('loadUserDetails'))
+      .then(() => this.$store.dispatch('getUserDetails'))
       .catch(err => {console.log(err)});
     },
-
-    
 
     ...mapActions(['patchUserProfile']),
     async patchUser({username, first_name, last_name, email, linkedin_link, researchgate_link}) {
@@ -345,26 +328,14 @@ export default {
       }
     },
 
-    ...mapActions(['get_listmissionusers']),
+    ...mapActions(['getListMissionUsers']),
     async getMissionUserDetails(missionId){
-      await this.get_listmissionusers(missionId)
+      await this.getListMissionUsers(missionId)
         .then(() => console.log('get list ok'))      
         .catch(err => {console.log(err)});
-    },
-
-    // getMissionUserDetails() {
-    //   const{data} = getAPI.get('/api/users/missionusers/?missionid=1',
-    //   // getAPI.get(`/api/users/missionusers/?missionid={$this.missionId}`,
-    //   // const {data} = getAPI.get('/api/users/missionusers/',
-    //     // { params: { missionid: this.missionId, userid: this.userDetails.id },
-    //     {headers: { 'Authorization': 'Token ' + this.$store.state.token }})
-    //     .then(() => console.log('dataaa', data))     
-    //   .then(() => console.log('get missionuser ok', data))
-    //   .catch(err => {console.log(err)});
-    // },   
+    },  
   }
 };
-
 </script>
 
 <style lang="scss" scoped>
@@ -381,6 +352,12 @@ export default {
 
 .row-wrap-profile {
   width: 60%;
+}
+
+@media all and (max-width: 960px) {
+  .row-wrap-profile {
+    width: 90%;
+  }
 }
 
 .card-user {
@@ -403,9 +380,15 @@ export default {
   width: 700px;
 }
 
+@media all and (max-width: 960px) {
+  .card-mission-details {
+    margin: auto;
+    width: 300px;
+  }
+}
+
 .form-login {
   width: 85%;
   margin: auto;
 }
-
 </style>

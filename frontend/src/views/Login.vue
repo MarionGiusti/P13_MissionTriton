@@ -117,10 +117,13 @@ export default {
         await this.userLogin({ username, password })
           .then(() => console.log('login ok'))      
           .then(() => this.$router.push('/'))
-          .catch(err => {console.log(err)});
-      }   
+          .then(() => this.$store
+            .dispatch('getUserDetails')
+            .catch(err => {console.log(err)}))
+          .catch(err => {console.log(err)})
+      }
     }
-  }
+  },
 }
 </script>
 

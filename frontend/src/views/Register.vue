@@ -20,7 +20,7 @@
                     required
                     :rules="[v => !!v || 'Item is required']"
                   />
-                  <v-text-field
+                  <!-- <v-text-field
                     label="Prénom"
                     prepend-icon="mdi-account"
                     type="text"
@@ -37,7 +37,7 @@
                     v-model="form.lastname"
                     required
                     :rules="[v => !!v || 'Item is required']"
-                  />
+                  /> -->
                   <v-text-field
                     label="Email"
                     prepend-icon="mdi-email"
@@ -54,7 +54,8 @@
                     color="teal"
                     v-model="form.password1"
                     required
-                    :rules="[v => !!v || 'Item is required']"
+                    :rules="[v => !!v || 'Item is required',
+                     v => v.length >= 8 || '8 charactères minimum']"
                   />
 
                   <v-text-field
@@ -64,7 +65,7 @@
                     color="teal"
                     v-model="form.password2"
                     required
-                    :rules="[v => !!v || 'Item is required']"
+                    :rules="pwdRules"
                   />
               </v-form>
             <!-- </v-card-text> -->
@@ -93,25 +94,43 @@ export default {
         valid: false,
         form: {
           username:"",
-          firstname:"",
-          lastname:"",
+          // firstname:"",
+          // lastname:"",
           email:"",
           password1:"",
           password2:"",
-        }
+        },
+        pwdRules: [
+          v => !!v ,
+          v => (v && v === this.form.password1) || 'Les mots de passe ne correspondent pas',
+        ]
     }
   },
 
   methods: {
-    async register ({username, password1, email}) {
+    // async register ({username, password1, email}) {
+    //   console.log(this.valid)
+    //   if (this.$refs.form.validate()) {
+    //     console.log(this.valid)
+    //     // await mapActions(['userLogin'])
+    //     await this.$store
+    //       .dispatch('userRegister', { username, password1, email })
+    //       .then(() => console.log('register ok'))
+    //       .then(() => this.$router.push('/'))
+    //       .catch(err => {
+    //         console.log(err)
+    //       });
+    //   }   
+    // }
+    async register ({username, password1, password2, email}) {
       console.log(this.valid)
       if (this.$refs.form.validate()) {
         console.log(this.valid)
-        // await mapActions(['userLogin'])
         await this.$store
-          .dispatch('userRegister', { username, password1, email })
+          .dispatch('userRegister', { username, password1, password2, email })
           .then(() => console.log('register ok'))
-          .then(() => this.$router.push('/'))
+          .then(() => alert( `L'utilisateur ${email} a bien été enregistré !` ))
+          .then(() => this.$router.push('/login'))
           .catch(err => {
             console.log(err)
           });

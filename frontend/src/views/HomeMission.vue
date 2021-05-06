@@ -3,14 +3,14 @@
     <v-container class="d-flex flex-column background-wrap" fluid>
       <v-row >
         <v-col cols="12">
-          <h1>Actu</h1>
+          <h2>Actu </h2>
           <v-divider/>
         </v-col>
         <v-col cols="12">
-          <Post/>
+          <Actu/>
         </v-col>
         <v-col cols="12">
-          <h1>Where is the ship ?</h1>
+          <h2>Where is the ship ?</h2>
           <v-divider/>
           <Map/>
         </v-col>
@@ -22,39 +22,32 @@
 <script>
 
 import Map from '@/components/Map'
-import Post from '@/components/Post'
-import { mapGetters } from 'vuex'
+import Actu from '@/components/Actu'
+// import { mapGetters } from 'vuex'
+// import { mapState } from 'vuex'
 
 export default {
   name: 'HomeMission',
   components: {
     Map,
-    Post,
+    Actu,
   },
-  data() {
-      return {
-        items: [
-          {
-            src: require("../assets/seascape.jpg"),
-          },
-          {
-            src:require("../assets/logo.png"),
-          },
-        ]
-      }
-  },
-
+ 
   computed: {
     // ...mapState([
       // 'allMissions',
       // 'missionDetails'
+      // 'shipPositionsDetails'
     // ])
-    ...mapGetters([ 'currentMission' ]),
-      missionD() {
-        return this.currentMission(this.$route.params.id)
-      },
+    
+    // ...mapGetters([ 'currentMission' ]),
+    //   missionD() {
+    //     return this.currentMission(this.$route.params.id)
+    //   },
 
   },
+
+  
 }
 </script>
 
