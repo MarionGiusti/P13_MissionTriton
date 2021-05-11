@@ -1,4 +1,5 @@
-# P13_Mission Triton *Develop your own application [OpenClassrooms Project]*
+# P13_Mission Triton
+*Develop your own application [OpenClassrooms Project]*
 ![image](frontend/src/assets/logo_triton.png)
 *****************************************************************************************************************
 ### About The Project:
@@ -8,42 +9,42 @@ Connected user can:
 - visit others missions
 
 Non connected user can:
-- resgister
+- register
 - visit others missions
 
 ### Built with:
-*Backend*
+*Backend:*
 * Python 3.8.2
 * Django 3.1.4
 * Django REST 3.12.2
 
-*Frontend*
+*Frontend:*
 * VueJS 2.6.12
 * Vuetify 2.4.6
 * Vuex 3.6.2
 
-*Database*
+*Database:*
 * PostgreSQL
 
-*WebServer*
+*WebServer:*
 
 ### Getting Started locally:
 *Prerequisites: Technical tools presented :point_up: must be installed*
 
-#####Environment Variables:
+##### Environment Variables:
 Create a .env file in backend and frontend folders.
 Copy those variables and change their values.
 
-#####Backend:
-|##### Variable Name | ##### Value           |
+##### Backend:
+|   Variable Name    |         Value         |
 |--------------------|-----------------------|
 | DJANGO_SECRET_KEY  | Django App Secret key |
 | DATABASE_NAME      | Database name         |
 | DATABASE_USER      | Database user         |
 | DATABASE_PWD       | Database user pwd     |
 
-#####Frontend:
-|##### Variable Name     | ##### Value                    |
+##### Frontend:
+|      Variable Name     |             Value              |
 |------------------------|--------------------------------|
 | VUE_APP_GOOGLEMAPS_KEY | Google Maps JavaScript Api Key |
 
