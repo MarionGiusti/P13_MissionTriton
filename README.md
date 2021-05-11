@@ -33,7 +33,7 @@ Non connected user can:
 ### Getting Started locally:
 *Prerequisites: Technical tools presented :point_up: must be installed*
 
-##### Environment Variables:
+#### 1.Environment Variables:
 Create a .env file in backend and frontend folders.
 Copy those variables and change their values.
 
