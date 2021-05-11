@@ -9,6 +9,7 @@
           color="#198F8F"
           class="mb-2 mt-0"
           @click="$refs.inputUpload.click()"
+          v-if="verifMember == true"
         >
           Nouvelle photo
         </v-btn>
@@ -82,55 +83,61 @@
 
 <script>
 import { getAPI } from '../axios-api'
+import { mapGetters } from 'vuex'
 
 // @ is an alias to /src
 export default {
   name: 'Gallery',
   components: {
   },
-  data: () => ({
-    pictures: {},
-    dialog: false,
-    form: {
-     title:""
-    },
-    selectedFile: null,
-    files:[],
-
-    valid: false,
-
-  }),
+  data() {
+    return {
+      dialog: false,
+      files:[],
+      form: {
+      title:""
+      },    
+      pictures: {},
+      selectedFile: null,
+      valid: false,
+    };
+  },
 
   mounted(){
     this.getPicture()
   },
 
+  computed: {
+    ...mapGetters(['currentMission' ]),
+    missionD() {
+      return this.currentMission(this.$route.params.id);
+    },
+    ...mapGetters([ 'memberMission']),
+    verifMember() {
+      return this.memberMission(this.$route.params.id);
+    }
+  },
+
   methods:{
     async getPicture() {
       const data = await getAPI.get(`/api/posts/gallery/?missionId=${this.$route.params.id}`)
-      this.pictures = data.data
+      this.pictures = data.data;
     },
 
 
     onFileSelected(event) {
       const files = event.target.files
       this.files = [...this.files, ...files];
-      console.log('ABEILLE', this.files)
-      this.onUpload()
+      this.onUpload();
     },
 
     async onUpload() {
       const fd = new FormData();
-
       this.files.forEach((file) => {
         if(this.validate(file) === "") {
-          fd.append('file', file, file.name)
+          fd.append('file', file, file.name);
         }
-        
       })
-
-      // fd.append('file', this.selectedFile, this.selectedFile.name)
-      console.log('ON UPlOAD FILE', fd)
       try {
         await getAPI.post(`/api/posts/gallery/post_picture/${this.$route.params.id}/`, 
           fd, {
@@ -138,19 +145,18 @@ export default {
             'Authorization': 'Token ' + this.$store.state.token,
             'Content-Type': 'multipart/form-data',   
           }
-          })
-          this.files = [];
-        this.getPicture()
+        });
+        this.files = [];
+        this.getPicture();
       } catch(err) {
         console.log(`erreur: ${err}`) 
       }
-      
     },
 
     validate(file) {
-      const allowedTypes = ["image/png", "image/jpeg", "image/gif"]
+      const allowedTypes = ["image/png", "image/jpeg", "image/gif"];
       if (!allowedTypes.includes(file.type)) {
-        return "Not an image"
+        return "Not an image";
       }
       return "";
     },
@@ -159,7 +165,7 @@ export default {
       await getAPI.delete(`/api/posts/gallery/${id}/`, {
         headers: { 'Authorization': 'Token ' + this.$store.state.token,}
       })
-      this.getPicture()
+      this.getPicture();
     },
 
   }
@@ -167,10 +173,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.background-wrap {
-  margin-top: 40px;
-  background-color:#54658C;
-  width: 95%;
-}
+  .background-wrap {
+    margin-top: 40px;
+    background-color:#54658C;
+    width: 95%;
+  }
 </style>

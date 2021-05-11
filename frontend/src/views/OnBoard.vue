@@ -4,13 +4,11 @@
       <h2>La vie à Bord !</h2>
       <v-divider/>
       <Post Category="Onboard" ></Post>
-
     </v-container>
   </v-main>
 </template>
 
 <script>
-// import { mapState } from 'vuex'
 import Post from '../components/Post.vue'
 
   export default {
@@ -22,12 +20,9 @@ import Post from '../components/Post.vue'
 </script>
 
 <style lang="scss" scoped>
-
-.background-wrap {
-  margin-top: 40px;
-  background-color:#54658C;
-  width: 95%;
-}
-
-
+  .background-wrap {
+    margin-top: 40px;
+    background-color:#54658C;
+    width: 95%;
+  }
 </style>

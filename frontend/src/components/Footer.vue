@@ -15,14 +15,6 @@
           >
             {{ item.title }}
           </v-btn>
-          <!-- <v-list>
-            <v-list-item
-              v-for="item in items"
-            :key="i" router :to="{name: item.route}"
-            >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list> -->
         </v-col>
         <v-col
           class="text-center"
@@ -60,9 +52,8 @@
 </script>
 
 <style lang="scss" scoped>
-.btn focus{
-  box-shadow: none;
+  .btn focus{
+    box-shadow: none;
     outline: none;
-
-}
+  }
 </style>

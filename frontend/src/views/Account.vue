@@ -83,7 +83,6 @@
             <v-divider/>
           </div>
           <div class="">
-            <!-- <v-card class="card-user" color="#B75724"> -->
             <v-card class="card-user" color="#2AC9B2">
               <v-card-text>
                 <v-form class="form-login" ref="formUser" v-model="valid">
@@ -143,13 +142,28 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn class="btn" :disabled="!valid" outlined @click="patchUser(userDetails)">Modifier</v-btn>
+                <v-btn
+                  class="btn"
+                  :disabled="!valid"
+                  outlined
+                  @click="patchUser(userDetails)"
+                >
+                  Modifier
+                </v-btn>
+                <v-btn
+                  class="btn"
+                  :disabled="!valid"
+                  outlined
+                  @click="deleteUser(userDetails.id)"
+                >
+                  Supprimer
+                </v-btn>
               </v-card-actions>
             </v-card>
           </div>
         </div>
       </div>
-      <div class="d-flex flex-row" v-if="userDetails.missions.length != 0">
+      <div class="d-flex flex-row" v-if="userDetails.missions && userDetails.missions.length != 0">
         <div class="d-flex flex-column row-wrap-mission">
           <div class="mb-4">
             <h2 class="text-center">Missions </h2>
@@ -180,36 +194,49 @@
               <v-card class="card-mission-details" color="#8AEEDF">
                 <v-card-text>
                   <v-form class="form-login" ref="formMission" v-model="valid">
-                  <v-text-field
-                    label= "Job"
-                    type="text"
-                    color="teal"
-                    v-model="missionUserDetails.job"
-                    :value="missionUserDetails.job"
-                    :counter="150"
-                  />
-                  <v-text-field
-                    label="Laboratoire"
-                    type="text"
-                    color="teal"
-                    v-model="missionUserDetails.team_lab"
-                    :value="missionUserDetails.team_lab"
-                    :counter="200"
+                    <v-text-field
+                      label= "Job"
+                      type="text"
+                      color="teal"
+                      v-model="missionUserDetails.job"
+                      :value="missionUserDetails.job"
+                      :counter="150"
+                    />
+                    <v-text-field
+                      label="Laboratoire"
+                      type="text"
+                      color="teal"
+                      v-model="missionUserDetails.team_lab"
+                      :value="missionUserDetails.team_lab"
+                      :counter="200"
 
-                  />
-                  <v-textarea
-                    label="Description"
-                    type="text"
-                    color="teal"
-                    v-model="missionUserDetails.description"
-                    :value="missionUserDetails.description"
-                  ></v-textarea>
-
-                </v-form>
-                  
+                    />
+                    <v-textarea
+                      label="Description"
+                      type="text"
+                      color="teal"
+                      v-model="missionUserDetails.description"
+                      :value="missionUserDetails.description"
+                    ></v-textarea>
+                  </v-form>
                 </v-card-text>
                 <v-card-actions>
-                <v-btn class="btn" :disabled="!valid" outlined  @click="patchMissionUser(missionUserDetails)">Modifier</v-btn>
+                  <v-btn 
+                    class="btn"
+                    :disabled="!valid"
+                    outlined 
+                    @click="patchMissionUser(missionUserDetails)"
+                  >
+                    Modifier
+                  </v-btn>
+                  <v-btn 
+                    class="btn"
+                    :disabled="!valid"
+                    outlined
+                    @click="deleteMissionUser(missionUserDetails.id)"
+                  >
+                    Supprimer
+                  </v-btn>
                 </v-card-actions>
               </v-card>
             </div>
@@ -242,9 +269,7 @@ export default {
   },
   
   mounted() {
-    this.$store
-      .dispatch('getUserDetails')
-      .catch(err => {console.log(err)});
+    this.initialise()
   },
   
   computed: {
@@ -257,138 +282,163 @@ export default {
       'missionUserDetails'
     ]),
     userpic() {
-      return this.$store.state.userDetails.profile_image
+      return this.$store.state.userDetails.profile_image;
     }
   },
 
   methods: {
+    initialise(){
+      this.$store.dispatch('getUserDetails');
+    },
+
     showSelectedMission(missionItem) {
-      this.missionId = missionItem
-      this.card_mission = true
-      console.log("yooo", this.card_mission, this.missionId)
-      this.getMissionUserDetails(this.missionId)
-      console.log("yuu token", this.$store.state.token)
+      this.missionId = missionItem;
+      this.card_mission = true;
+      this.getMissionUserDetails(this.missionId);
     },
 
     onFileSelected(event, photo) {
-      this.selectedFile = event.target.files[0]
+      this.selectedFile = event.target.files[0];
       if (photo == 0) {
-        this.onUpload()
+        this.onUpload();
       } else {
-        this.onUploadBackground()
+        this.onUploadBackground();
       }
     },
     onUpload() {
       const fd = new FormData();
-      fd.append('file', this.selectedFile, this.selectedFile.name)
-      getAPI.post('/api/users/profile_picture/', 
-      fd, {
-      headers: { 
-        'Authorization': 'Token ' + this.$store.state.token,
-        'Content-Type': 'multipart/form-data',   
+      fd.append('file', this.selectedFile, this.selectedFile.name);
+      try {
+        getAPI.post('/api/users/profile_picture/', fd, {
+          headers: { 
+            'Authorization': 'Token ' + this.$store.state.token,
+            'Content-Type': 'multipart/form-data',   
+          }
+        });
+        this.$store.dispatch('getUserDetails');
+      } catch(err) {
+          console.log(`erreur: ${err}`)
       }
-      })
-      .then(() => console.log('patch image ok', fd))
-      .then(() => this.$store.dispatch('getUserDetails'))
-      .catch(err => {console.log(err)});
     },
     onUploadBackground() {
       const fd = new FormData();
       fd.append('file', this.selectedFile, this.selectedFile.name)
-      getAPI.post('/api/users/background_picture/', 
-      fd, {
-      headers: { 
-        'Authorization': 'Token ' + this.$store.state.token,
-        'Content-Type': 'multipart/form-data',   
+      try {
+        getAPI.post('/api/users/background_picture/', fd, {
+          headers: { 
+            'Authorization': 'Token ' + this.$store.state.token,
+            'Content-Type': 'multipart/form-data',   
+          }
+        });
+        this.$store.dispatch('getUserDetails');
+      } catch(err) {
+          console.log(`erreur: ${err}`)
       }
-      })
-      .then(() => console.log('patch background image ok', fd))
-      .then(() => this.$store.dispatch('getUserDetails'))
-      .catch(err => {console.log(err)});
     },
 
     ...mapActions(['patchUserProfile']),
     async patchUser({username, first_name, last_name, email, linkedin_link, researchgate_link}) {
-      console.log(this.valid)
       if (this.$refs.formUser.validate()) {
-        console.log(this.valid)
-        await this.patchUserProfile({ username, first_name, last_name, email, linkedin_link, researchgate_link })
-          .then(() => console.log('method patch user ok'))
-          .catch(err => {console.log(err)});
+        try {
+          await this.patchUserProfile({ username, first_name, last_name, email, linkedin_link, researchgate_link });
+        } catch(err) {
+          console.log(`erreur: ${err}`)
+        }
       }
     },
     ...mapActions(['patchMissionUserProfile']),
     async patchMissionUser({job, team_lab, description}) {
-      console.log(this.valid)
       if (this.$refs.formMission.validate()) {
-        console.log(this.valid)
-        await this.patchMissionUserProfile({job, team_lab, description})
-          .then(() => console.log('method patch mission user ok'))
-          .catch(err => {console.log(err)});
-      }
+        try {
+          await this.patchMissionUserProfile({job, team_lab, description});
+        } catch(err) {
+          console.log(`erreur: ${err}`)
+        }
+      } 
     },
 
     ...mapActions(['getListMissionUsers']),
     async getMissionUserDetails(missionId){
-      await this.getListMissionUsers(missionId)
-        .then(() => console.log('get list ok'))      
-        .catch(err => {console.log(err)});
-    },  
+      await this.getListMissionUsers(missionId);
+    },
+
+    async deleteMissionUser(id){
+      await getAPI.delete(`/api/users/missionusers/${id}/`, {
+        headers: { 'Authorization': 'Token ' + this.$store.state.token,}
+      });
+      this.card_mission = false;
+      this.initialise();
+    },
+
+    async deleteUser(id){
+      this.$router.push('/');
+      this.logout();
+      await getAPI.delete(`/api/users/${id}/`, {
+        headers: { 'Authorization': 'Token ' + this.$store.state.token,}
+      });
+    },
+
+    async logout () {
+      try {
+        await this.$store.dispatch('userLogout');
+      } catch(err) {
+      console.log(`erreur: ${err}`) 
+      }
+    },
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.background-wrap {
-  // background-color: #D0D0A3;#54658C#B6885D#EBA165#F2BDA0#FCA678
-  background-color:#03584B;
-  width: 95%;
-}
+  .background-wrap {
+    background-color:#03584B;
+    width: 95%;
+  }
 
-.bottom-back {
-  margin-top: -60px;
-  margin-left: 60px;
-}
+  .bottom-back {
+    margin-top: -60px;
+    margin-left: 60px;
+  }
 
-.row-wrap-profile {
-  width: 60%;
-}
-
-@media all and (max-width: 960px) {
   .row-wrap-profile {
+    width: 60%;
+  }
+
+  @media all and (max-width: 960px) {
+    .row-wrap-profile {
+      width: 90%;
+    }
+  }
+
+  .card-user {
+    margin: auto;
     width: 90%;
   }
-}
 
-.card-user {
-  margin: auto;
-  width: 90%;
-}
+  .row-wrap-mission {
+    width: 80%;
+  }
 
-.row-wrap-mission {
-  width: 80%;
-}
+  .card-mission {
+    margin: auto;
+    margin-left: 10%;
+    width: 100%;
+  }
 
-.card-mission {
-  margin: auto;
-  margin-left: 10%;
-  width: 100%;
-}
-
-.card-mission-details {
-  margin: auto;
-  width: 700px;
-}
-
-@media all and (max-width: 960px) {
   .card-mission-details {
     margin: auto;
-    width: 300px;
+    width: 700px;
   }
-}
 
-.form-login {
-  width: 85%;
-  margin: auto;
-}
+  @media all and (max-width: 960px) {
+    .card-mission-details {
+      margin: auto;
+      width: 300px;
+    }
+  }
+
+  .form-login {
+    width: 85%;
+    margin: auto;
+  }
 </style>

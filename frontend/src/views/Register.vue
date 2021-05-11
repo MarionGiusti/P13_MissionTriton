@@ -1,139 +1,93 @@
 <template>
   <v-main>
     <v-container>
-      <!-- <v-row align="center" justify="center">
-        <v-col> -->
-          <!-- <v-card class="card-login" color="indigo lighten-5"> -->
-            <!-- <v-card-text> -->
-              <div class="form-wrap" align="center" justify="center">
-              <v-form 
-                ref="form"
-                v-model="valid"
-                lazy-validation
-                >
-                  <v-text-field
-                    label="Nom d'utilisateur"
-                    prepend-icon="mdi-account-circle"
-                    type="text"
-                    color="teal"
-                    v-model="form.username"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
-                  />
-                  <!-- <v-text-field
-                    label="Prénom"
-                    prepend-icon="mdi-account"
-                    type="text"
-                    color="teal"
-                    v-model="form.firstname"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
-                  />
-                  <v-text-field
-                    label="Nom"
-                    prepend-icon="mdi-account"
-                    type="text"
-                    color="teal"
-                    v-model="form.lastname"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
-                  /> -->
-                  <v-text-field
-                    label="Email"
-                    prepend-icon="mdi-email"
-                    type="email"
-                    color="teal"
-                    v-model="form.email"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
-                  />
-                  <v-text-field
-                    label="Mot de passe"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                    color="teal"
-                    v-model="form.password1"
-                    required
-                    :rules="[v => !!v || 'Item is required',
-                     v => v.length >= 8 || '8 charactères minimum']"
-                  />
+      <div class="form-wrap" align="center" justify="center">
+        <v-form 
+          ref="form"
+          v-model="valid"
+          lazy-validation
+          >
+            <v-text-field
+              label="Nom d'utilisateur"
+              prepend-icon="mdi-account-circle"
+              type="text"
+              color="teal"
+              v-model="form.username"
+              required
+              :rules="[v => !!v || 'Item is required']"
+            />
+            <v-text-field
+              label="Email"
+              prepend-icon="mdi-email"
+              type="email"
+              color="teal"
+              v-model="form.email"
+              required
+              :rules="[v => !!v || 'Item is required']"
+            />
+            <v-text-field
+              label="Mot de passe"
+              prepend-icon="mdi-lock"
+              :type="show ? 'text' : 'password'"
+              color="teal"
+              v-model="form.password1"
+              :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+              required
+              :rules="[v => !!v || 'Item is required',
+                v => v.length >= 8 || '8 charactères minimum']"
+              @click:append="show = !show"
+            />
 
-                  <v-text-field
-                    label="Confirmer mot de passe"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                    color="teal"
-                    v-model="form.password2"
-                    required
-                    :rules="pwdRules"
-                  />
-              </v-form>
-            <!-- </v-card-text> -->
-            <!-- <v-card-actions> -->
-              <v-btn class="btn" :disabled="!valid" outlined @click="register(form)">S'inscrire</v-btn>
-            <!-- </v-card-actions> -->
-          <!-- </v-card> -->
-              </div>
-
-        <!-- </v-col> -->
-      <!-- </v-row> -->
+            <v-text-field
+              label="Confirmer mot de passe"
+              prepend-icon="mdi-lock"
+              :type="show2 ? 'text' : 'password'"
+              color="teal"
+              v-model="form.password2"
+              :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+              required
+              :rules="pwdRules"
+              @click:append="show2 = !show2"
+            />
+        </v-form>
+        <v-btn class="btn" :disabled="!valid" outlined @click="register(form)">S'inscrire</v-btn>
+      </div>
     </v-container>
   </v-main>
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
-
 export default {
   name: 'Register',
-  components: {
-  },
 
-  data () {
+data () {
     return {
-        valid: false,
-        form: {
-          username:"",
-          // firstname:"",
-          // lastname:"",
-          email:"",
-          password1:"",
-          password2:"",
-        },
-        pwdRules: [
-          v => !!v ,
-          v => (v && v === this.form.password1) || 'Les mots de passe ne correspondent pas',
-        ]
+      form: {
+        username:"",
+        email:"",
+        password1:"",
+        password2:"",
+      },
+      pwdRules: [
+        v => !!v ,
+        v => (v && v === this.form.password1) || 'Les mots de passe ne correspondent pas',
+      ],
+      show: false,
+      show2: false,
+      valid: false,
     }
   },
 
   methods: {
-    // async register ({username, password1, email}) {
-    //   console.log(this.valid)
-    //   if (this.$refs.form.validate()) {
-    //     console.log(this.valid)
-    //     // await mapActions(['userLogin'])
-    //     await this.$store
-    //       .dispatch('userRegister', { username, password1, email })
-    //       .then(() => console.log('register ok'))
-    //       .then(() => this.$router.push('/'))
-    //       .catch(err => {
-    //         console.log(err)
-    //       });
-    //   }   
-    // }
     async register ({username, password1, password2, email}) {
-      console.log(this.valid)
       if (this.$refs.form.validate()) {
-        console.log(this.valid)
-        await this.$store
-          .dispatch('userRegister', { username, password1, password2, email })
-          .then(() => console.log('register ok'))
-          .then(() => alert( `L'utilisateur ${email} a bien été enregistré !` ))
-          .then(() => this.$router.push('/login'))
-          .catch(err => {
-            console.log(err)
-          });
+        try {
+          await this.$store.dispatch('userRegister', { username, password1, password2, email });
+          alert( `L'utilisateur ${email} a bien été enregistré !` );
+          this.$router.push('/login');
+        } catch(err) {
+            console.log(`erreur: ${err}`)
+        }         
       }   
     }
   }
@@ -141,18 +95,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .card-login {
-//   margin: auto;
-//   width: 60%;
-// }
+  .form-wrap {
+    width: 60%;
+    margin: auto;
+  }
 
-.form-wrap {
-  width: 60%;
-  margin: auto;
-}
-
-.btn {
-  margin:auto;
-  color: rgb(60, 173, 173); 
-}
+  .btn {
+    margin:auto;
+    color: rgb(60, 173, 173); 
+  }
 </style>

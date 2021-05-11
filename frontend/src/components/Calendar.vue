@@ -17,7 +17,6 @@
               class="mr-4 hidden-sm-and-down"
               color="grey darken-2"
               @click="setToday"
-              
             >
               Today
             </v-btn>
@@ -92,7 +91,6 @@
             @click:event="showEvent"
             @click:more="viewDay"
             @click:date="viewDay"
-            @change="updateRange"
           ></v-calendar>
           <v-menu
             v-model="selectedOpen"
@@ -114,9 +112,8 @@
                 </v-btn>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               </v-toolbar>
-              <v-card-text>
 
-                <!-- <span v-html="selectedEvent.details"></span> -->
+              <v-card-text>
                 <v-form v-if="currentlyEditing !== selectedEvent.id">
                   {{ selectedEvent.details }}
                 </v-form>
@@ -127,8 +124,8 @@
                     placeholder="ajouter détails">
                   </v-textarea>
                 </v-form>
-
               </v-card-text>
+
               <v-card-actions>
                 <v-btn
                   text
@@ -154,6 +151,7 @@
             </v-card>
           </v-menu>
         </v-sheet>
+
         <!-- Add event dialog -->
         <div class="text-center">
           <v-dialog
@@ -194,12 +192,6 @@
                   required
                   :rules="[v => !!v || 'Item is required']"
                 />
-                <!-- <v-text-field
-                  label="Mission"
-                  type="text"
-                  color="teal"
-                  v-model="mission"
-                /> -->
                 <v-select
                   :items="selectMission"
                   label="Mission"
@@ -236,9 +228,6 @@
              </v-card>
           </v-dialog>
         </div>
-  
-
-
       </v-col>
     </v-row>
 </template>
@@ -253,7 +242,20 @@ export default {
   },
 
   data: () => ({
+    color: "",
+    currentlyEditing: null,
+    details: "",
+    dialog: false,
+    end: null,
+    events: [],
     focus: '',
+    mission: null,
+    name: null,
+    selectedElement: null,
+    selectedEvent: {},
+    selectMission: [],
+    selectedOpen: false,
+    start: null,
     type: 'month',
     typeToLabel: {
       month: 'Month',
@@ -261,27 +263,10 @@ export default {
       day: 'Day',
       '4day': '4 Days',
     },
-    selectedEvent: {},
-    selectedElement: null,
-    selectedOpen: false,
-    // colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-    // names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
-    
-    name: null,
-    details: "",
-    start: null,
-    end: null,
-    mission: null,
-    color: "",
-    currentlyEditing: null,
-    events: [],
-    dialog: false,
-    selectMission: [],
   }),
 
-
   async mounted () {
-    this.$refs.calendar.checkChange()
+    this.$refs.calendar.checkChange();
     this.getEvents();
   },
 
@@ -309,8 +294,9 @@ export default {
       }))
       this.events = events;
     },
+    
     async addEvent(){
-      if(this.name && this.start && this.end){
+      if(this.name && this.start && this.end) {
         console.log('ooooo', this.color)
         await getAPI.post(`/api/schedules/`, {
           name: this.name ,
@@ -320,7 +306,7 @@ export default {
           mission: this.mission,
           color: this.color
         }, {
-        headers: { 'Authorization': 'Token ' + this.$store.state.token,}
+          headers: { 'Authorization': 'Token ' + this.$store.state.token,}
         });
         this.getEvents();
         this.name = "";
@@ -333,6 +319,7 @@ export default {
         alert('Name, start and date are required');
       }
     },
+
     async updateEvent(ev){
       await getAPI.patch(`/api/schedules/${ev.id}/`, {
         details: ev.details
@@ -342,6 +329,7 @@ export default {
       this.selectedOpen = false;
       this.currentlyEditing = null;
     },
+
     async deleteEvent(ev){
       console.log('chou', ev)
       await getAPI.delete(`/api/schedules/${ev}/`, {
@@ -350,25 +338,31 @@ export default {
       this.selectedOpen = false;
       this.getEvents();
     },
+
     viewDay ({ date }) {
-      this.focus = date
-      this.type = 'day'
+      this.focus = date;
+      this.type = 'day';
     },
+
     getEventColor (event) {
       return event.color
     },
+
     setToday () {
       this.focus = ''
     },
+
     prev () {
       this.$refs.calendar.prev()
     },
     next () {
       this.$refs.calendar.next()
     },
+
     editEvent(ev) {
       this.currentlyEditing = ev.id;
     },
+
     showEvent ({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event
@@ -387,32 +381,32 @@ export default {
 
       nativeEvent.stopPropagation()
     },
-    updateRange ({ start, end }) {
-      const events = []
 
-      const min = new Date(`${start.date}T00:00:00`)
-      const max = new Date(`${end.date}T23:59:59`)
-      const days = (max.getTime() - min.getTime()) / 86400000
-      const eventCount = this.rnd(days, days + 20)
+    // updateRange ({ start, end }) {
+    //   const events = []
+    //   const min = new Date(`${start.date}T00:00:00`)
+    //   const max = new Date(`${end.date}T23:59:59`)
+    //   const days = (max.getTime() - min.getTime()) / 86400000
+    //   const eventCount = this.rnd(days, days + 20)
 
-      for (let i = 0; i < eventCount; i++) {
-        const allDay = this.rnd(0, 3) === 0
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-        const second = new Date(first.getTime() + secondTimestamp)
+    //   for (let i = 0; i < eventCount; i++) {
+    //     const allDay = this.rnd(0, 3) === 0
+    //     const firstTimestamp = this.rnd(min.getTime(), max.getTime())
+    //     const first = new Date(firstTimestamp - (firstTimestamp % 900000))
+    //     const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
+    //     const second = new Date(first.getTime() + secondTimestamp)
 
-        events.push({
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: first,
-          end: second,
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
-        })
-      }
+    //     events.push({
+    //       name: this.names[this.rnd(0, this.names.length - 1)],
+    //       start: first,
+    //       end: second,
+    //       color: this.colors[this.rnd(0, this.colors.length - 1)],
+    //       timed: !allDay,
+    //     })
+    //   }
+    //   this.events = events
+    // },
 
-      this.events = events
-    },
     rnd (a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a
     },

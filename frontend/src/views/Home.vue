@@ -1,15 +1,14 @@
 <template>
-<v-main >
-    <HeroBlock/>
-    <v-container  class="missions-wrap" fluid >
-      <div class="d-flex flex-column mb-4">
-        <h2 class="text-center">Nos Missions</h2>
-        <v-divider/>
-      </div>
-    <ScrollAllMissions/>
-    </v-container>
-
-</v-main>
+  <v-main >
+      <HeroBlock/>
+      <v-container  class="missions-wrap" fluid >
+        <div class="d-flex flex-column mb-4">
+          <h2 class="text-center">Nos Missions</h2>
+          <v-divider/>
+        </div>
+      <ScrollAllMissions/>
+      </v-container>
+  </v-main>
 </template>
 
 <script>
@@ -24,22 +23,15 @@ export default {
   },
 
   async mounted() {
-    await this.$store
-      .dispatch('loadMissionList')
-      .catch(err => {
-        console.log(err)
-      });
+    await this.$store.dispatch('loadMissionList')
   },
-
-  
 }
 </script>
 
 <style lang="scss" scoped>
-.missions-wrap {
-  margin-top: 40px;
-  background-color:#54658C;
-  width: 95%;
-}
-
+  .missions-wrap {
+    margin-top: 40px;
+    background-color:#54658C;
+    width: 95%;
+  }
 </style>

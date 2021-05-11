@@ -4,14 +4,11 @@
       <h2>Médiation</h2>
       <v-divider/>
       <Post Category="Med" ></Post>
-
     </v-container>
   </v-main>
 </template>
 
 <script>
-// import { mapState, mapActions } from 'vuex'
-// import { getAPI } from '../axios-api'
 import Post from '../components/Post.vue'
 
   export default {
@@ -22,14 +19,10 @@ import Post from '../components/Post.vue'
   }
 </script>
 
-
 <style lang="scss" scoped>
-
-.background-wrap {
-  margin-top: 40px;
-  background-color:#54658C;
-  width: 95%;
-}
-
-
+  .background-wrap {
+    margin-top: 40px;
+    background-color:#54658C;
+    width: 95%;
+  }
 </style>

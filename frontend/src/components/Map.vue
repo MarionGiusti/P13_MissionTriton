@@ -3,7 +3,7 @@
     <div class="mx-8">
 
       <v-row>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="3" v-if="verifMember && verifMember == true">
           <v-form
               ref="form"
               v-model="valid"
@@ -54,8 +54,6 @@
             :items-per-page="5"
             class="elevation-1"
           >
-
-
             <template v-slot:top>                  
               <v-dialog
                 v-model="dialog"
@@ -102,8 +100,7 @@
                       </v-row>
                     </v-container>
                   </v-card-text>
-
-                  <v-card-actions>
+                  <v-card-actions >
                     <v-spacer></v-spacer>
                     <v-btn
                       color="teal"
@@ -125,7 +122,7 @@
                 </v-card>
               </v-dialog>
             </template>
-            <template v-slot:item.actions="{ item }">
+            <template v-slot:item.actions="{ item }" v-if="verifMember && verifMember == true">
               <v-icon
                 small
                 class="mr-2"
@@ -165,8 +162,8 @@
               >
               </gmap-polyline>
             </GmapMap>
-            <div id="map" ref="map">
-            </div>
+            <!-- <div id="map" ref="map">
+            </div> -->
         </v-col>
       </v-row>
     </div>
@@ -174,7 +171,7 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { mapState } from 'vuex'
 import { getAPI } from '../axios-api'
 
@@ -265,14 +262,15 @@ const lineSymbol = {
       dialog (val) {
         val || this.close()
       },
+
+      // currentMission(promise) {
+      //   // save Promise result in local state
+      //   promise.then(this.verifMember)
+      // }
     },
     
     async created() {
       await this.initialise()
-      // await this.$store.dispatch('getShipPositionsMission', this.$route.params.id)
-      // this.testspos()
-      // this.drawDirection()
-      // this.Coordinates = this.shipPositionsDetails
     },
 
     computed: {
@@ -290,24 +288,26 @@ const lineSymbol = {
       ...mapState([
         'shipPositionsDetails',
       ]),
-
-      
+      ...mapGetters([ 'memberMission']),
+      verifMember() {
+        return this.memberMission(this.$route.params.id)
+      }      
     },
 
     methods: {
-
       async initialise(){
         await this.$store.dispatch('getShipPositionsMission', this.$route.params.id)
         this.testspos()
         this.drawDirection()
         this.Coordinates = this.shipPositionsDetails
       },
+
       testspos() {
-        // console.log(this.shipPositionsDetails)
         this.shipPositionsDetails.forEach((pos) => {
           this.shippos.push({"id": Number(pos.id), "position": {"lat": Number(pos.latitude), "lng": Number(pos.longitude)}})
         })
       },
+      
       drawDirection() {
         this.shippos.forEach((pos) => {
           this.shippath.push( {lat:pos.position.lat , lng:pos.position.lng} )
@@ -328,15 +328,9 @@ const lineSymbol = {
                 'Content-Type': 'application/json',   
               }
             })
-            
             this.shippos=[]
             this.shippath=[]
             await this.initialise()
-            // await this.$store.dispatch('getShipPositionsMission', this.$route.params.id)
-            // this.shippos=[]
-            // this.shippath=[]
-            // this.testspos()
-            // this.drawDirection()
           } catch(err) {
             console.log(`erreur: ${err}`) 
           }          
@@ -344,9 +338,7 @@ const lineSymbol = {
       },
 
       async UpdateShipPosition (item) {
-        console.log('FLORICHON', item)
           try {
-            console.log('FLORI', item.id)
             await getAPI.patch(`api/missions/shippositions/${item.id}/`, {         
               date_time: item.date_time,
               latitude: item.latitude,
@@ -354,46 +346,34 @@ const lineSymbol = {
               }, {
               headers: { 'Authorization': 'Token ' + this.$store.state.token,}
             })
-
             await this.$store.dispatch('getShipPositionsMission', this.$route.params.id)
               this.shippos=[]
               this.shippath=[]
               this.testspos()
               this.drawDirection()
-
           } catch(err) {
             console.log(`erreur: ${err}`) 
           }          
       },
 
-
       editItem (item) {
         this.editedIndex = this.Coordinates.indexOf(item)
         this.editedItem = Object.assign({}, item)
-        console.log('BZZZZZZZZZZ', this.editedItem)
-
         this.dialog = true
-
       },
 
       async deleteItem (item) {
         this.editedIndex = this.Coordinates.indexOf(item)
         this.editedItem = Object.assign({}, item)
-        // this.dialogDelete = true 
-
         this.Coordinates.splice(this.editedIndex, 1) 
-        // console.log('CHOCHOCHHO', item)  
         await getAPI.delete(`/api/missions/shippositions/${item.id}`, {
           headers: { 'Authorization': 'Token ' + this.$store.state.token,}
         })
-
-
         await this.$store.dispatch('getShipPositionsMission', this.$route.params.id)
-            this.shippos=[]
-            this.shippath=[]
-            this.testspos()
-            this.drawDirection()     
-
+          this.shippos=[]
+          this.shippath=[]
+          this.testspos()
+          this.drawDirection()     
       },
 
       close () {
@@ -404,8 +384,6 @@ const lineSymbol = {
         })
       },
 
-      
-
       async save (item) {
         if (this.editedIndex > -1) {
           console.log("BEEEE!!!!!!!!!!!", this.Coordinates)
@@ -413,23 +391,20 @@ const lineSymbol = {
         } else {
           this.Coordinates.push(this.editedItem)
         }
-
         await this.UpdateShipPosition(item)
         this.close()
-      },
-    
-      
+      },  
     },
   }
 </script>
 
-<style scoped>
-#map {
-  height:600px;
-}
+<style lang="scss" scoped>
+  #map {
+    height:600px;
+  }
 
-.btn {
-  color: rgb(60, 173, 173); 
-  margin-bottom: 6px;
-}
+  .btn {
+    color: rgb(60, 173, 173); 
+    margin-bottom: 6px;
+  }
 </style>

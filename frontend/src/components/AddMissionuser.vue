@@ -30,7 +30,9 @@
         :disabled="!valid"
         outlined
         @click="addMissionuser(form)"
-      >Ajouter</v-btn>
+      >
+        Ajouter
+      </v-btn>
     </div>
   </v-container>
 </template>
@@ -40,26 +42,20 @@ import { getAPI } from '../axios-api'
 
 export default {
   name: 'AddMissionuser',
-  components: {
-  },
 
  data () {
     return {
-        valid: true,
-        form: {
-          mission:"",
-          email:"",
-        },
-        
+      form: {
+        mission:"",
+        email:"",
+      },
+      valid: true,
     }
   },
 
   methods: {
     async addMissionuser({mission, email}) {
-      console.log('form:', {mission, email })
       if (this.$refs.form.validate()) {
-        console.log(this.valid)
-        
         await getAPI.post('/api/users/missionusers/', 
         this.form, {
           headers: { 
@@ -67,10 +63,8 @@ export default {
             'Content-Type': 'application/json',   
           }
           })
-        .then(() => console.log('addMissionuser ok', this.form))
-        .then(() => alert( `L'utilisateur ${email} a bien été ajouté à la mission ${mission} !` ))
-        .then(() => this.resetForm())
-        .catch(err => {console.log(err)}); 
+        alert( `L'utilisateur ${email} a bien été ajouté à la mission ${mission} !` )
+        this.resetForm() 
       }
     },
     resetForm() {
@@ -81,13 +75,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-wrap {
-  width: 60%;
-  margin: auto;
-}
+  .form-wrap {
+    width: 60%;
+    margin: auto;
+  }
 
-.btn {
-  margin:auto;
-  color: rgb(60, 173, 173); 
-}
+  .btn {
+    margin:auto;
+    color: rgb(60, 173, 173); 
+  }
 </style>

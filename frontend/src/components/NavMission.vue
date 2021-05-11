@@ -54,12 +54,7 @@
           },
         ]
       }
-    },
-    
+    }, 
   }
-
 </script>
 
-<style scoped>
-
-</style>

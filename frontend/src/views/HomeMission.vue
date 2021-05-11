@@ -20,45 +20,26 @@
 </template>
 
 <script>
-
 import Map from '@/components/Map'
 import Actu from '@/components/Actu'
-// import { mapGetters } from 'vuex'
-// import { mapState } from 'vuex'
 
 export default {
   name: 'HomeMission',
   components: {
     Map,
     Actu,
-  },
- 
-  computed: {
-    // ...mapState([
-      // 'allMissions',
-      // 'missionDetails'
-      // 'shipPositionsDetails'
-    // ])
-    
-    // ...mapGetters([ 'currentMission' ]),
-    //   missionD() {
-    //     return this.currentMission(this.$route.params.id)
-    //   },
-
-  },
-
-  
+  }, 
 }
 </script>
 
 <style lang="scss" scoped>
-.home-carousel {
-  height: 500px !important;
-}
-// #98ACD7
-.background-wrap {
-  margin-top: 40px;
-  background-color:#54658C;
-  width: 95%;
-}
+  .home-carousel {
+    height: 500px !important;
+  }
+  
+  .background-wrap {
+    margin-top: 40px;
+    background-color:#54658C;
+    width: 95%;
+  }
 </style>

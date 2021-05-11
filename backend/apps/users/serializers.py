@@ -3,10 +3,8 @@ from rest_framework import serializers
 from .models import CustomUser, MissionUser
 
 class UserSerializer(serializers.ModelSerializer):
-    # missionusers = serializers.StringRelatedField(many=True)
     class Meta:
         model = CustomUser
-        # fields = "__all__"
         fields = (
             "id",
             "username",
@@ -18,7 +16,6 @@ class UserSerializer(serializers.ModelSerializer):
             "linkedin_link",
             "researchgate_link",
             "missions",
-            # "missionusers"
         )
         extra_kwargs = {"password":{"write_only":True,"required":True}}
         depth = 1
@@ -34,5 +31,3 @@ class MissionUserSerializer(serializers.ModelSerializer):
             "team_lab",
             "description"
         )
-        # depth show details of user and mission foreign key
-        # depth = 1

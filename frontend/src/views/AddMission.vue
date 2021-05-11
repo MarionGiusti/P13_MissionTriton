@@ -83,23 +83,15 @@
           @click="addMission(form)"
         >Ajouter</v-btn>
       </div>
-       <!-- <AddMissionuser/> -->
-
     </v-container>
   </v-main>
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
-// import AddMissionuser from '@/components/AddMissionuser'
-
 export default {
   name: 'AddMission',
-  components: {
-    // AddMissionuser,
-  },
 
- data () {
+  data () {
     return {
         menu1: false,
         menu2: false,
@@ -120,38 +112,33 @@ export default {
 
   methods: {
     async addMission({name, ship, start_date, end_date }) {
-      console.log('form:', {name, ship, start_date, end_date })
       if (this.$refs.form.validate()) {
-        console.log(this.valid)
-        await this.$store
-          .dispatch('missionRegister', { name, ship, start_date, end_date })
-          .then(() => console.log('addMission ok'))
-          // .then(() => this.$router.push('/'))
-          .then(() => alert(`La mission: ${name} a bien été enregistrée !`))
-          .then(() => this.resetForm())
-          .then(() => this.$store.dispatch('loadMissionList'))
-          .catch(err => {
-            console.log(err)
-          });
+        try {
+          await this.$store.dispatch('missionRegister', { name, ship, start_date, end_date });
+          alert(`La mission: ${name} a bien été enregistrée !`);
+          this.resetForm();
+          this.$store.dispatch('loadMissionList');
+        } catch(err) {
+          console.log(`erreur: ${err}`)
+        } 
       }
     },
-    resetForm(){
-      this.$refs.form.reset()
-    },
-  },
 
-  
+    resetForm(){
+      this.$refs.form.reset();
+    },
+  }, 
 }
 </script>
 
 <style lang="scss" scoped>
-.form-wrap {
-  width: 60%;
-  margin: auto;
-}
+  .form-wrap {
+    width: 60%;
+    margin: auto;
+  }
 
-.btn {
-  margin:auto;
-  color: rgb(60, 173, 173); 
-}
+  .btn {
+    margin:auto;
+    color: rgb(60, 173, 173); 
+  }
 </style>

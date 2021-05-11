@@ -15,20 +15,13 @@ import Calendar from '@/components/Calendar'
     components: {
       Calendar,
     },
-    data() {
-      return {
-
-      }
-    },
   }
-
 </script>
 
 <style lang="scss" scoped>
-
-.background-wrap {
-  margin-top: 40px;
-  background-color:#B6885D;
-  width: 95%;
-}
+  .background-wrap {
+    margin-top: 40px;
+    background-color:#B6885D;
+    width: 95%;
+  }
 </style>

@@ -1,17 +1,17 @@
 <template>
   <v-container>
     <div class="mx-8">
-        <v-btn
-          color="#198F8F"
-          class="mb-2 mt-4"
-          @click="dialog = true "
-        >
-          Nouveau post {{Category}}
-        </v-btn>
+      <v-btn
+        color="#198F8F"
+        class="mb-2 mt-4"
+        @click="dialog = true "
+        v-if="verifMember == true"
+      >
+        Nouveau post {{Category}}
+      </v-btn>
       
       <v-row class="mt-4" >
         <v-col  v-for="item in postMedBoard" :key="item.id" cols="12" align="center" class="mb-4">
-
           <v-card class="post-wrap" flat>    
             <v-card-title >
               <h3>{{ item.title }}</h3>
@@ -21,7 +21,6 @@
                 new Date(item.created_at).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
               }}
               </i>
-
               <v-btn
                 class="ml-6 mr-4" 
                 icon
@@ -37,13 +36,16 @@
               <br/>
               {{ item.content }}
               <br/>
-              <embed 
-                v-if="item.video_url!==null" 
-                class="mt-4 embed-responsive" 
-                :src= "`${item.video_url}`"
-                max-width="700" 
-                max-height="500"
-              >
+              <div class="resp-conteneur">
+                <iframe
+                  id="ytplayer"
+                  type="text/html"
+                  :src= "`${item.video_url}`"
+                  frameborder="0"
+                  allowfullscreen="allowfullscreen"
+                >
+                </iframe>
+              </div>
             </v-card-text>
           </v-card>
         </v-col>
@@ -75,12 +77,6 @@
                 required
                 :rules="[v => !!v || 'Item is required']"
               ></v-textarea>
-              <v-file-input
-                accept="image/*"
-                prepend-icon="mdi-camera"
-                label="Image"
-                @change="onFileSelected($event)"
-              ></v-file-input>
               <v-text-field
                 label="Embed Url vidéo youtube "
                 type="text"
@@ -88,15 +84,30 @@
                 v-model="send_form.form.video_url"
               />
             </v-form>
+            <v-file-input
+                accept="image/*"
+                prepend-icon="mdi-camera"
+                label="Image"
+                @change="onFileSelected($event)"
+              ></v-file-input>
             <v-btn 
               type="submit"
               color="teal"
-              class="mr-40"
+              class="mt-4"
+              text
               @click.stop="dialog=false"
               @click="addPost"
             >
               Créer
             </v-btn>
+            <v-btn
+              text
+              @click.stop="dialog = false"
+              color="teal"
+              class="mt-4"
+              >
+                Fermer
+              </v-btn>
             </v-container>
             </v-card>
         </v-dialog>
@@ -116,6 +127,7 @@
                 type="text"
                 color="teal"
                 v-model="selectedItem.title"
+                :value="selectedItem.title"
                 required
                 :rules="[v => !!v || 'Item is required']"
                 :counter="100"
@@ -125,23 +137,24 @@
                 type="text"
                 color="teal"
                 v-model="selectedItem.content"
+                :value="selectedItem.content"
                 required
                 :rules="[v => !!v || 'Item is required']"
               ></v-textarea>
-              <v-file-input
-                accept="image/*"
-                prepend-icon="mdi-camera"
-                label="Image"
-                v-model="selectedItem.post_image"
-                @change="onFileSelected($event)"
-              ></v-file-input>
               <v-text-field
                 label="Embed Url vidéo youtube "
                 type="text"
                 color="teal"
                 v-model="selectedItem.video_url"
+                :value="selectedItem.video_url"
               />
             </v-form>
+            <v-file-input
+                accept="image/*"
+                prepend-icon="mdi-camera"
+                label="Image"
+                @change="onFileSelected($event)"
+              ></v-file-input>
             <v-btn 
               text
               @click.stop="dialog_update=false"
@@ -156,6 +169,12 @@
             >
               Supprimer
             </v-btn>
+            <v-btn 
+              text
+              @click.stop="dialog_update=false"
+            >
+              Fermer
+            </v-btn>
             </v-container>
             </v-card>
         </v-dialog>
@@ -165,19 +184,22 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { getAPI } from '../axios-api'
 
   export default {
     name: 'Post',
-
     props: ['Category'],
 
     data () {
       return {
         dialog: false,
         dialog_update: false,
-        valid:false,
+        params: {
+          missionId: this.$route.params.id,
+          category: this.Category
+        },
+        selectedItem: {},
         send_form: {
           form: {
             title:"",
@@ -187,11 +209,7 @@ import { getAPI } from '../axios-api'
           missionId: this.$route.params.id,
           category: this.Category
         },
-        params: {
-          missionId: this.$route.params.id,
-          category: this.Category
-        },
-        selectedItem: {},
+        valid:false,
       }
     },
 
@@ -201,14 +219,19 @@ import { getAPI } from '../axios-api'
 
     computed: {
       ...mapState(['postMedBoard']),
-    
+      ...mapGetters(['currentMission' ]),
+      missionD() {
+        return this.currentMission(this.$route.params.id)
+      },
+      ...mapGetters([ 'memberMission']),
+      verifMember() {
+        return this.memberMission(this.$route.params.id)
+      } 
     },
 
     methods: {
       async loadPost(params){
         await this.$store.dispatch('getPost', params)
-        .then(() => console.log('postmed ok'))
-        .catch(err => {console.log(err)})
       },
 
       onFileSelected(event) {
@@ -217,7 +240,6 @@ import { getAPI } from '../axios-api'
       async onUpload(postId) {
         const fd = new FormData();
         fd.append('file', this.selectedFile, this.selectedFile.name)
-        console.log('ON UPlOAD FILE', fd)
         if (postId !== 0) {
           await getAPI.post(`/api/posts/update_post_picture/${postId}/`, 
           fd, {
@@ -241,31 +263,32 @@ import { getAPI } from '../axios-api'
 
       ...mapActions(['postPost']),
       async addPost(){
-        console.log('ADD POST', this.params)
-        if (this.$refs.form.validate()) {
-          await this.postPost(this.send_form)
-          if (this.selectedFile) {
-            await this.onUpload(0)
-          }       
-          this.loadPost(this.params)
+        try {
+          if (this.$refs.form.validate()) {
+            await this.postPost(this.send_form)
+            if (this.selectedFile) {
+              await this.onUpload(0)
+            }       
+            this.loadPost(this.params)
+          }
+        } catch(err) {
+            console.log(`erreur: ${err}`)
         }
       },
 
       ...mapActions(['patchPost']),
       async updatePost() {
-        console.log(this.valid)
         if (this.$refs.form_update.validate()) {
-          console.log(this.valid)
-          await this.patchPost(this.selectedItem)
-            .then(() => console.log('method patch mission user ok'))
-            .catch(err => {console.log(err)});
-
-          if (this.selectedFile) {
-            await this.onUpload(this.selectedItem.id)
+          try {
+            await this.patchPost(this.selectedItem)
+            if (this.selectedFile) {
+              await this.onUpload(this.selectedItem.id)
+            }
+            this.loadPost(this.params)
+          } catch(err) {
+            console.log(`erreur: ${err}`)
           }
         }
-        console.log('UPDATE SELECTED ITEM', this.selectedItem)
-        this.loadPost(this.params)
       },
 
       ...mapActions(['removePost']),
@@ -278,13 +301,26 @@ import { getAPI } from '../axios-api'
         this.selectedItem = item
       },
     }
-
   }
 </script>
 
-
 <style lang="scss" scoped>
-.post-wrap {
-  background-color:#A3B3D5;
-}
+  .post-wrap {
+    background-color:#A3B3D5;
+  }
+
+  .resp-conteneur {
+    position: relative; 
+    overflow: hidden; 
+    padding-top: 56.25%; 
+  }
+
+  .resp-conteneur iframe { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    border: 0; 
+  }
 </style>

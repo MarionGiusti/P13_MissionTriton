@@ -1,12 +1,11 @@
 <template>
   <v-container>
-    <!-- <h2 class="text-center">Nos moments clés</h2>
-    <v-divider/> -->
     <div class="mx-8">
       <v-btn
         color="#198F8F"
         @click="dialog = true "
         class="mb-4"
+        v-if="verifMember == true"
       >
         Nouvel évènement
       </v-btn>
@@ -17,16 +16,6 @@
           :color="event.color"
           fill-dot
         >
-        <!-- <v-btn
-                  class="mb-4" 
-                  icon
-                  outlined
-                  color="#54658C"
-                  
-                >
-                  
-                </v-btn> -->
-
           <template v-slot:opposite>
             <span
               v-if="event.end_date==null"
@@ -48,11 +37,14 @@
             ></span>
           </template>
           <div class="py-4">
-            <v-btn @click="selectItem(event); dialog_update = true" text>
+            <v-btn @click="selectItem(event); dialog_update = true" text v-if="verifMember == true">
               <h3 class="mb-4`">
               {{event.name}}
               </h3>
             </v-btn>
+            <h3 class="mb-4`" v-if="verifMember == false">
+              {{event.name}}
+            </h3>
             <div>
               {{event.description}}
             </div>
@@ -151,6 +143,14 @@
             >
               Créer
             </v-btn>
+            <v-btn
+              text
+              @click.stop="dialog = false"
+              color="teal"
+              class="mb-4"
+              >
+                Fermer
+              </v-btn>
             </v-container>
             </v-card>
         </v-dialog>
@@ -257,47 +257,52 @@
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
 import { getAPI } from '../axios-api'
-
+import { mapGetters } from 'vuex'
 
   export default {
     name: 'Timeline',
-    data: () => ({
-      timelines:{},
-      valid: false,
-      dialog: false,
-      dialog_update:false,
-      menu1: false,
-      menu2: false,
-      send_form: {
-        form: {
-          name:"",
-          description:"",
-          start_date: "",
-          end_date:"",
-          color:"",
+    data() {
+      return {
+        dialog: false,
+        dialog_update:false,
+        menu1: false,
+        menu2: false,
+        send_form: {
+          form: {
+            name:"",
+            description:"",
+            start_date: "",
+            end_date:"",
+            color:"",
+          },
+          missionId: null,
         },
-        missionId: null,
-      },
-      selectedItem: {},    
-    }),
+        selectedItem: {},
+        timelines:{},
+        valid: false,
+     }
+    },
 
   mounted() {
-    // this.$store.dispatch('getTimelinesMission', this.$route.params.id)
     this.getTimelinesMission(this.$route.params.id)
   },
+
+  computed: {
+      ...mapGetters([ 'memberMission' ]),
+      verifMember() {
+        return this.memberMission(this.$route.params.id)
+      } 
+    },
 
   methods:{
     async getTimelinesMission(missionId) {
       const data = await getAPI.get(`/api/missions/timelines/?missionid=${missionId}`)
       this.timelines = data.data
-      console.log('GET TIMELINE',this.timelines)
     },
 
     async addTimeline(){
       this.send_form.missionId = this.$route.params.id
-      console.log('FORM')
       if (this.$refs.form.validate()) {
         await getAPI.post('/api/missions/timelines/', 
           this.send_form, {
@@ -322,11 +327,9 @@ import { getAPI } from '../axios-api'
       },
 
     async deleteTimeline({id}){
-      console.log('chou', id)
       await getAPI.delete(`/api/missions/timelines/${id}/`, {
         headers: { 'Authorization': 'Token ' + this.$store.state.token,}
       })
-      
       await this.getTimelinesMission(this.$route.params.id)
     },
 
@@ -338,7 +341,3 @@ import { getAPI } from '../axios-api'
 
   }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

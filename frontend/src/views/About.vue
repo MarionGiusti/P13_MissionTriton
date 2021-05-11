@@ -1,7 +1,6 @@
 <template>
   <v-main>
     <v-container  class="d-flex flex-column background-wrap" fluid >
-      <!-- <v-row> -->
       <h2>Notre mission</h2>
       <v-divider/>
       <div class="text-end">
@@ -11,6 +10,7 @@
           outlined
           color="#A3B3D5"
           @click="deleteMission()"
+          v-if="verifMember == true"
         >
           <v-icon>
             mdi-delete
@@ -43,16 +43,15 @@ import { getAPI } from '../axios-api'
       Timeline,
     },
 
-    data () {
-      return {
-
-      }
-    },
     computed: {
-      ...mapGetters([ 'currentMission' ]),
+      ...mapGetters([ 'currentMission']),
       missionD() {
         return this.currentMission(this.$route.params.id)
       },
+      ...mapGetters([ 'memberMission']),
+      verifMember() {
+      return this.memberMission(this.$route.params.id)
+      } 
     },
 
     methods:{
@@ -62,16 +61,14 @@ import { getAPI } from '../axios-api'
         })
         this.$router.push('/')
       },
-
     }
   }
 </script>
 
 <style lang="scss" scoped>
-
-.background-wrap {
-  margin-top: 40px;
-  background-color:#54658C;
-  width: 95%;
-}
+  .background-wrap {
+    margin-top: 40px;
+    background-color:#54658C;
+    width: 95%;
+  }
 </style>

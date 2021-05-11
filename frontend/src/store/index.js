@@ -18,7 +18,6 @@ export default new Vuex.Store({
     scheduleUserDetails: {},
     postActu: {},
     postMedBoard: {},
-    // postBoard: {},
   },
 
   getters: {
@@ -43,6 +42,31 @@ export default new Vuex.Store({
         missions => new Date(missions.end_date).getTime() < new Date().getTime()
       ).slice().sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
     },
+
+    // memberMission:(state)=> (missionName) => {
+    //   var missionNameUser = []
+    //   for (const mission in state.userDetails.missions) {
+    //     var miss = state.userDetails.missions[mission].name
+    //     console.log('mission', miss)
+    //     missionNameUser.push(miss)
+    //   }
+    //   // var miss = state.missions.find(missions => missions.id === parseInt(id))
+    //   // console.log("MISS",miss.name)
+    //   // // for (const item  in miss) {
+    //   // //   var missi = miss[item].name
+    //   // //   console.log('missi', missi)
+    //   // // }     
+    //   return missionNameUser.includes(missionName)
+    // }
+    memberMission:(state, getters)=> (id) => {
+      var missionNameUser = []
+      for (const mission in state.userDetails.missions) {
+        var miss = state.userDetails.missions[mission].name
+        console.log('mission', miss)
+        missionNameUser.push(miss)
+      }  
+      return missionNameUser.includes(getters.currentMission(id)["name"])
+    }
   },
 
   mutations: {
@@ -119,14 +143,14 @@ export default new Vuex.Store({
 
   actions: {
     async userLogin({ commit }, usercredentials) {
-        const { data } = await getAPI.post('/api-token-auth/', {
-            username: usercredentials.username,
-            password: usercredentials.password
-          })
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('userId', data.user_id)
-        // console.log("action userLogin, dataToken:", data)
-        commit('setTokenId', data)
+      const { data } = await getAPI.post('/api-token-auth/', {
+          username: usercredentials.username,
+          password: usercredentials.password
+        })
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('userId', data.user_id)
+      // console.log("action userLogin, dataToken:", data)
+      commit('setTokenId', data)
     },
 
     async userRegister({ commit }, usercredentials) {
@@ -139,12 +163,12 @@ export default new Vuex.Store({
       //   })
       //   commit('setTokenId', data )
       const { data } = await getAPI.post('/dj-rest-auth/registration/', {
-            username: usercredentials.username,
-            password1: usercredentials.password1,
-            password2: usercredentials.password2,
-            email: usercredentials.email,
-          })
-          commit('setTokenId', data )
+        username: usercredentials.username,
+        password1: usercredentials.password1,
+        password2: usercredentials.password2,
+        email: usercredentials.email,
+      })
+      commit('setTokenId', data )
 
     },
 
@@ -160,15 +184,17 @@ export default new Vuex.Store({
         commit('updateMissionList', data)
     },
 
-    userLogout({ commit }) {
-      const data  =  {
+    async userLogout({ commit }) {
+      // await getAPI.post("/dj-rest-auth/logout/", {
+      // })
+      const { data }  = {
         userId: null,
         token: null
       }
-      localStorage.removeItem('token')
-      localStorage.removeItem('userId')
-      // console.log("action userLogout, logoutData:", data)
       commit('setTokenId', data)
+      localStorage.removeItem('userId')
+      localStorage.removeItem('token')
+      console.log("action userLogout, logoutData:", data)
     },
 
     async patchUserProfile({ commit, state }, usercredentials) {

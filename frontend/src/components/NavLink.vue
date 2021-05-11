@@ -6,23 +6,22 @@
     prominent
     color="#A3D0CA"
   >
-    <!-- <v-toolbar-title> -->
-      <!-- <router-link to="/">
-      <v-img
-        class="mx-2"
-        src="../assets/logo_triton.png"
-        max-height="160"
-        max-width="160"
-        margin-top="6"
-        contain
-      >
-      </v-img></router-link> -->
-    <!-- </v-toolbar-title> -->
-    <!-- <v-toolbar-title class="d-flex justify-center ml-16 pl-16"> -->
     <v-toolbar-title >
+      <v-row  v-if="this.$route.params.id==null">
+        <v-col cols="12">
+          <router-link to="/">
+          <v-img
+            class="mx-2"
+            src="../assets/logo_triton.png"
+            max-width="160"
+            contain
+          >
+          </v-img></router-link>
+        </v-col>
+      </v-row>
 
-      <v-row >
-        <v-col cols="12" sm="6">
+      <v-row v-if="this.$route.params.id && missionD">
+        <v-col cols="12" sm="6" >
           <router-link to="/">
           <v-img
             class="mx-2"
@@ -33,25 +32,19 @@
           </v-img></router-link>
         </v-col>
         <v-col cols="6" class="hidden-xs-only" v-if="this.$route.params.id && missionD">
-      <!-- <div  class="justify-center"> -->
         <h1 class="mission-title">{{ missionD.name }}</h1>
         <h3 class="mission-title">{{ missionD.ship_name }}</h3>
-      <!-- </div> -->
         </v-col>
       </v-row>
     </v-toolbar-title>
- 
-    
     <v-spacer></v-spacer>
-
+    
     <div class="d-flex flex-row flex-wrap justify-space-between" >
-
       <v-menu
         bottom
         left
-        v-if="token!==null && userDetails.missions.length!==0"
+        v-if="token!==null && userDetails.missions && userDetails.missions.length!==0"
         > 
-        
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             icon
@@ -66,10 +59,6 @@
           </v-btn>
         </template>
         <v-list>
-          <!-- GOOD <v-list-item
-            v-for="(mission, i) in missions" 
-            :key="i" router :to="{name: 'HomeMission', params: {id: mission.id}}"
-          > -->
           <v-list-item
             v-for="(mission, i) in userDetails.missions" 
             :key="i" router :to="{name: 'HomeMission', params: {id: mission.id}}"
@@ -100,7 +89,7 @@
         <v-list>
           <v-list-item
             v-for="(item, i) in items"
-            :key="i" router :to="{name: item.route, params: {userId: userId}}" @click="item.action"
+            :key="i" router :to="{name: item.route, params: {userId: userId}}" @click="item.action !==''"
           >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
@@ -147,7 +136,7 @@ import { mapState, mapGetters } from 'vuex'
             action: "",
           },
           {
-            title:"Ajouter une mission / participant",
+            title:"Ajouter une mission",
             route:"AddMission",
             action: "",
           },
@@ -160,33 +149,22 @@ import { mapState, mapGetters } from 'vuex'
       }
     },
 
-// Plus besoin des watchs avec getter ?
-    // watch: {
-    //   '$route'(to, from) {
-    //     // console.log('to', to);
-    //     // console.log('from', from);
-    //     if(to !== from ) {
-    //       this.currentMission()
-    //     }
-    //   }, 
-
     computed: {
       ...mapState([ 'token', 'userId' ]),
       ...mapState([ 'userDetails' ]),
       ...mapGetters([ 'currentMission' ]),
       missionD() {
         return this.currentMission(this.$route.params.id)
-      },
+      }
     },
 
     methods: {
-      logout () {
-        this.$store
-          .dispatch('userLogout')
-          .then(() => console.log('logout ok', this.token ))
-          .catch(err => {
-            console.log(err)
-          });
+      async logout () {
+        try {
+          await this.$store.dispatch('userLogout')
+        } catch(err) {
+        console.log(`erreur: ${err}`) 
+        }
       },     
     },    
   }

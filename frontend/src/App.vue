@@ -1,11 +1,7 @@
 <template>
   <v-app>
     <NavLink/>
-    <!-- <v-main > -->
-    <!-- <v-container class="fill-height" fluid> -->
       <router-view/>
-    <!-- </v-container> -->
-    <!-- </v-main> -->
     <v-footer color="#A3D0CA">
       <Footer/>
     </v-footer> 
@@ -25,26 +21,16 @@ export default {
   },
 
   async mounted() {
-    await this.$store
-      .dispatch('loadMissionList')
-      .catch(err => {
-        console.log(err)
-      });
+    await this.$store.dispatch('loadMissionList')
 
     if (this.token) {
-      await this.$store
-        .dispatch('getUserDetails')
-        .catch(err => {console.log(err)})
-        .then(() =>  console.log('LOAD USERDETAILS'))
+      await this.$store.dispatch('getUserDetails')
     }
   },
 
   computed: {
     ...mapState(['token'])
   }
-
- 
-
 };
 </script>
 

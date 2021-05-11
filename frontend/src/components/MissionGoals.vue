@@ -1,9 +1,6 @@
 <template>
   <v-container>
-    <!-- <h2 class="text-center">Notre mission</h2>
-    <v-divider/> -->
     <div class="mx-8">
-
       <v-card
         class="mx-auto post-wrap"
         flat
@@ -31,6 +28,7 @@
                   outlined
                   color="#54658C"
                   @click="dialog=true"
+                  v-if="verifMember == true"
                 >
                   <v-icon>
                     mdi-grease-pencil
@@ -55,11 +53,11 @@
         >
           <v-card>
             <v-container>            
-            <v-form 
-              ref="form"
-              v-model="valid"
-              lazy-validation
-              @submit.prevent="updateMission"
+              <v-form 
+                ref="form"
+                v-model="valid"
+                lazy-validation
+                @submit.prevent="updateMission"
               >
                 <v-text-field
                   label="Nom de la mission"
@@ -130,24 +128,31 @@
                   ></v-date-picker>
                 </v-menu>
                 <v-textarea
-                label="Decription"
-                type="text"
+                  label="Decription"
+                  type="text"
+                  color="teal"
+                  required
+                  v-model="missionD.description"
+                ></v-textarea>
+              </v-form>
+              <v-btn 
+                text
+                @click.stop="dialog=false"
+                @click="updateMission(missionD)"
+                :disabled="!valid"
                 color="teal"
-                required
-                v-model="missionD.description"
-              ></v-textarea>
-            </v-form>
-
-            <v-btn 
-              text
-              @click.stop="dialog=false"
-              @click="updateMission(missionD)"
-              :disabled="!valid"
-            >
-              Modifier
-            </v-btn>
+              >
+                Modifier
+              </v-btn>
+              <v-btn
+                text
+                @click.stop="dialog = false"
+                color="teal"
+              >
+                Fermer
+              </v-btn>
             </v-container>
-            </v-card>
+          </v-card>
         </v-dialog>
       </div>
     </div>
@@ -162,15 +167,14 @@ import { getAPI } from '../axios-api'
     name: 'MissionGoals',
     data() {
       return {
-        menu1: false,
-        menu2: false,
-        dialog: false,
-        valid: false,
         dateRules: [
           v => !!v ,
           v => (v && v > this.missionD.start_date) || 'Date de fin avant date début',
         ],
-
+        dialog: false,
+        menu1: false,
+        menu2: false,
+        valid: false,
       }
     },
     
@@ -179,6 +183,10 @@ import { getAPI } from '../axios-api'
       missionD() {
         return this.currentMission(this.$route.params.id)
       },
+      ...mapGetters([ 'memberMission']),
+      verifMember() {
+        return this.memberMission(this.$route.params.id)
+      } 
     },
 
     methods:{
@@ -193,9 +201,7 @@ import { getAPI } from '../axios-api'
         }, {
         headers: { 'Authorization': 'Token ' + this.$store.state.token }})
       },
-      
     }
-
   }
 
 </script>
@@ -204,9 +210,4 @@ import { getAPI } from '../axios-api'
   .post-wrap {
     background-color:#A3B3D5;
   }
-
-  // .card-title {
-  //   font-family: 'Dosis';
-  //   font-weight: 500;
-  // }
 </style>
