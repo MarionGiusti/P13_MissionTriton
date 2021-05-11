@@ -1,6 +1,8 @@
 # P13_Mission Triton
 *Develop your own application [OpenClassrooms Project]*
+
 ![image](frontend/src/assets/logo_triton.png)
+Conception graphique logotype ©Justine Monchecourt
 *****************************************************************************************************************
 ### About The Project:
 MissionTriton is an application to follow campaign at sea (fishing, oceanographic, ...).
