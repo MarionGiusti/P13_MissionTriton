@@ -13,7 +13,6 @@ export default new Vuex.Store({
     userDetails: {},
     missions: [],
     missionUserDetails: {},
-    // currentMissionDetails: {},
     shipPositionsDetails: {},
     scheduleUserDetails: {},
     postActu: {},
@@ -23,7 +22,6 @@ export default new Vuex.Store({
   getters: {
     // getField,
     currentMission: (state) => (id) => {
-      // console.log(JSON.stringify(state.missions))
       return state.missions.find(missions => missions.id === parseInt(id))
     },
     futureMissions: (state)=> {
@@ -87,13 +85,7 @@ export default new Vuex.Store({
 
     setMissions(state, allMissions) {
       state.missions = allMissions
-      // console.log('setMissions mutation:', allMissions)
     },
-
-    // setCurrentMissionDetails(state, data) {
-    //   state.currentMissionDetails = data
-    //   console.log('setcurrentMissionDetails mutation:', data)
-    // },
     
     updateMissionList(data) {
       console.log('updatemissionlist:', data)
@@ -101,35 +93,23 @@ export default new Vuex.Store({
 
     setMissionuser(state, missionUserDetails) {
       state.missionUserDetails = missionUserDetails
-      // console.log('setMissionuser mutation:', missionUserDetails)
     },
 
     updateMissionUserDetails(state, data) {
       state.missionUserDetails = Object.assign({}, state.missionUserDetails, data);
     },
 
-    // setTimelines(timelinesDetails) {
-    //   console.log('setTimelines mutation:', timelinesDetails)
-    // },
-
     setShipPositions(state, shipPositionsDetails) {
       state.shipPositionsDetails = shipPositionsDetails
-      // console.log('setShipPositions mutation:', shipPositionsDetails)
     },
 
     setScheduleUser(state, data) {
       state.scheduleUserDetails = data
-      // console.log('setScheduleUser mutation:', data)
     },
 
     setPostActu(state, data) {
       state.postActu = data
-      // console.log('setPostActu mutation:', data)
     },
-
-    // setPostMed(state, data) {
-    //   state.postMed = data
-    // },
 
     setPostMedBoard(state, data) {
       state.postMedBoard = data
@@ -149,19 +129,10 @@ export default new Vuex.Store({
         })
       localStorage.setItem('token', data.token)
       localStorage.setItem('userId', data.user_id)
-      // console.log("action userLogin, dataToken:", data)
       commit('setTokenId', data)
     },
 
     async userRegister({ commit }, usercredentials) {
-      // const { data } = await getAPI.post('/api/users/', {
-      //     username: usercredentials.username,
-      //     first_name: usercredentials.firstname,
-      //     last_name: usercredentials.lastname,
-      //     password: usercredentials.password1,
-      //     email: usercredentials.email,
-      //   })
-      //   commit('setTokenId', data )
       const { data } = await getAPI.post('/dj-rest-auth/registration/', {
         username: usercredentials.username,
         password1: usercredentials.password1,
@@ -180,20 +151,20 @@ export default new Vuex.Store({
           end_date: missioncredentials.end_date,
         }, {
           headers: { 'Authorization': 'Token ' + state.token,}})
-        // console.log('action missionRegister:', data)
         commit('updateMissionList', data)
     },
 
     async userLogout({ commit }) {
       // await getAPI.post("/dj-rest-auth/logout/", {
       // })
+      localStorage.removeItem('userId')
+      localStorage.removeItem('token')
       const { data }  = {
         userId: null,
         token: null
       }
+      console.log(data, 'local', localStorage)
       commit('setTokenId', data)
-      localStorage.removeItem('userId')
-      localStorage.removeItem('token')
       console.log("action userLogout, logoutData:", data)
     },
 
@@ -207,14 +178,12 @@ export default new Vuex.Store({
           researchgate_link: usercredentials.researchgate_link,
         }, {
         headers: { 'Authorization': 'Token ' + state.token,}})
-        // console.log("action patchUserProfile:", data)
         commit('updateUserDetails', data)
     },
 
     async getUserDetails({ commit, state }) {
       await getAPI.get(`api/users/${state.userId}`)
       .then(data => {
-        // console.log('action getUserDetails:', data)
         let userDetails = data.data
         commit('setUserDetails', userDetails)
       })
@@ -239,7 +208,6 @@ export default new Vuex.Store({
       await getAPI.get(`/api/users/missionusers/?missionid=${missionId}`,
         {headers: { 'Authorization': 'Token ' + state.token }})
       .then(data => {
-        // console.log('getListMissionUsers action', data.data)
         commit('setMissionuser', data.data[0])})
       .catch(error => {
         console.log(error)
@@ -254,24 +222,12 @@ export default new Vuex.Store({
           description: missionusercredentials.description,
         }, {
         headers: { 'Authorization': 'Token ' + state.token,}})
-        // console.log("action patchMissionUserProfile:", data)
         commit('updateMissionUserDetails', data)
     },
-
-    // async getTimelinesMission({commit}, missionId) {
-    //   await getAPI.get(`/api/missions/timelines/?missionid=${missionId}`)
-    //   .then(data => {
-    //     // console.log('getTimelinesMission action', data.data)
-    //     commit('setTimelines', data.data)})
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
-    // },
 
     async getShipPositionsMission({commit}, missionId) {
       await getAPI.get(`/api/missions/shippositions/?missionid=${missionId}`)
       .then(data => {
-        // console.log('getShipPositionsMission action', data.data)
         commit('setShipPositions', data.data)})
       .catch(error => {
         console.log(error)
@@ -283,7 +239,6 @@ export default new Vuex.Store({
         headers: { 'Authorization': 'Token ' + state.token,
       }})
       .then(data => {
-        // console.log('getScheduleUser', data.data)
         commit('setScheduleUser', data.data)})
       .catch(error => {
         console.log(error)
@@ -297,18 +252,7 @@ export default new Vuex.Store({
         if (params["category"] == 'Actu') {
           commit('setPostActu', data.data)
           console.log('ACTU', params["category"])
-
-        }
-        // else if (params["category"] == 'Med') {
-        //   commit('setPostMed', data.data)
-        //   console.log('MED', params["category"])
-
-        // }
-        // else if (params["category"] == 'Onboard') {
-        //   commit('setPostBoard', data.data)
-        //   console.log('BOARD', params["category"])
-        // }
-        else {
+        } else {
           commit('setPostMedBoard', data.data)
         }
       })
@@ -336,7 +280,6 @@ export default new Vuex.Store({
         video_url: postcredentials.video_url,
       }, {
       headers: { 'Authorization': 'Token ' + state.token,}})
-      // console.log("action patchMissionUserProfile:", data)
       commit('updatePostActu', data)
     },
 
@@ -347,8 +290,4 @@ export default new Vuex.Store({
     },
 
   },
-
-  modules: {
-
-  }
 })

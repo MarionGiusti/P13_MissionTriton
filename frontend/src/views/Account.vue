@@ -378,12 +378,8 @@ export default {
       });
     },
 
-    async logout () {
-      try {
-        await this.$store.dispatch('userLogout');
-      } catch(err) {
-      console.log(`erreur: ${err}`) 
-      }
+    logout () {
+      this.$store.dispatch('userLogout');
     },
   }
 };

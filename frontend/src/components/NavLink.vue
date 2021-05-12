@@ -89,7 +89,7 @@
         <v-list>
           <v-list-item
             v-for="(item, i) in items"
-            :key="i" router :to="{name: item.route, params: {userId: userId}}" @click="item.action !==''"
+            :key="i" router :to="{name: item.route, params: {userId: userId}}" @click="item.action !=''"
           >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
@@ -161,7 +161,7 @@ import { mapState, mapGetters } from 'vuex'
     methods: {
       async logout () {
         try {
-          await this.$store.dispatch('userLogout')
+          await this.$store.dispatch('userLogout');
         } catch(err) {
         console.log(`erreur: ${err}`) 
         }

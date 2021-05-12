@@ -4,7 +4,7 @@
 ![image](frontend/src/assets/logo_triton.png)
 Conception graphique logotype ©Justine Monchecourt
 *****************************************************************************************************************
-### About The Project:
+## About The Project:
 MissionTriton is an application to follow campaign at sea (fishing, oceanographic, ...).
 Connected user can:
 - register a mission and add members, posts, shipcoordinates, pictures gallery.
@@ -14,7 +14,7 @@ Non connected user can:
 - register
 - visit others missions
 
-### Built with:
+## Built with:
 *Backend:*
 * Python 3.8.2
 * Django 3.1.4
@@ -30,10 +30,10 @@ Non connected user can:
 
 *WebServer:*
 
-### Getting Started locally:
+## Getting Started locally:
 *Prerequisites: Technical tools presented :point_up: must be installed*
 
-#### 1.Environment Variables:
+### 1. Environment Variables:
 Create a .env file in backend and frontend folders.
 Copy those variables and change their values.
 
@@ -51,8 +51,8 @@ Copy those variables and change their values.
 | VUE_APP_GOOGLEMAPS_KEY | Google Maps JavaScript Api Key |
 
 
-### Monitoring:
+## Monitoring:
 - Travis-CI : continue integration, run app tests before a pull request
 
-### Online version:
+## Online version:
 :ocean: :fish: :volcano:
