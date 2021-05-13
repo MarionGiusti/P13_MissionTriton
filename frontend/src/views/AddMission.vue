@@ -118,6 +118,7 @@ export default {
           alert(`La mission: ${name} a bien été enregistrée !`);
           this.resetForm();
           this.$store.dispatch('loadMissionList');
+          this.$store.dispatch('getUserDetails');
         } catch(err) {
           console.log(`erreur: ${err}`)
         } 

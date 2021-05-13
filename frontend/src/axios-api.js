@@ -1,15 +1,10 @@
 import axios from 'axios'
 
-// axios.defaults.xsrfCookieName = 'csrftoken';
-// axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+const baseURL = process.env.VUE_APP_ROOT_API
 
 const getAPI = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
+    baseURL: baseURL,
     timeout: 1000,
-//     headers: {
-//         "Content-Type": "application/json",
-//         "X-CSRFToken": Cookies.get('csrftoken')
-//    },
 })
 
-export { getAPI }
+export { getAPI, baseURL }

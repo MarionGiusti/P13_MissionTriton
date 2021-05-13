@@ -19,7 +19,7 @@
             <v-img
               width="250px"
               height="250px"
-              :src="`http://127.0.0.1:8000/media/${member.picture}`" 
+              :src= static_url(member.picture)
               class="mt-4"
             >
             </v-img>
@@ -118,7 +118,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getAPI } from '../axios-api'
+import { getAPI, baseURL } from '../axios-api'
 
   export default {
     name: 'Team',
@@ -142,7 +142,12 @@ import { getAPI } from '../axios-api'
       },
       verifMember() {
         return this.memberMission(this.$route.params.id)
-      } 
+      },
+      static_url() {
+        return item => {
+          return `${baseURL}/media/${item}`
+        }
+      }
     },
 
     mounted(){

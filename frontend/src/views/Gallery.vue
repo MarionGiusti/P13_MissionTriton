@@ -19,8 +19,7 @@
           v-show="false" 
           ref="inputUpload"
           @change="onFileSelected($event)"
-          />
-              <!-- @click="deletePost(selectedItem.id)" -->
+        />
 
         <v-row v-if="pictures.length !==0">
           <v-col
@@ -34,7 +33,7 @@
           <v-hover>
         <template v-slot:default="{ hover }">
             <v-img
-              :src="`http://127.0.0.1:8000${item.picture}`"
+              :src= static_url(item.picture)
               aspect-ratio="1"
               class="grey lighten-2"
             >
@@ -82,7 +81,7 @@
 </template>
 
 <script>
-import { getAPI } from '../axios-api'
+import { getAPI, baseURL } from '../axios-api'
 import { mapGetters } from 'vuex'
 
 // @ is an alias to /src
@@ -100,13 +99,11 @@ export default {
       pictures: {},
       selectedFile: null,
       valid: false,
-      static_url: process.env.VUE_APP_ROOT_API,
     };
   },
 
   mounted(){
     this.getPicture();
-    console.log('ENV', process.env.VUE_APP_ROOT_API)
   },
 
   computed: {
@@ -117,6 +114,11 @@ export default {
     ...mapGetters([ 'memberMission']),
     verifMember() {
       return this.memberMission(this.$route.params.id);
+    },
+    static_url() {
+      return item => {
+        return `${baseURL}${item}`
+      }
     }
   },
 
