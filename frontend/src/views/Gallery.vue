@@ -100,11 +100,13 @@ export default {
       pictures: {},
       selectedFile: null,
       valid: false,
+      static_url: process.env.VUE_APP_ROOT_API,
     };
   },
 
   mounted(){
-    this.getPicture()
+    this.getPicture();
+    console.log('ENV', process.env.VUE_APP_ROOT_API)
   },
 
   computed: {
