@@ -14,7 +14,7 @@ branches:
   only:
     - staging
 
-env: DJANGO_SETTINGS_MODULE="purbeurre_project.settings.travis"
+env: DJANGO_SETTINGS_MODULE="config.settings.travis"
 
 services:
   - postgresql
