@@ -31,7 +31,7 @@
                             :class="{ 'on-hover': hover }"
                             size="150"
                           >
-                            <v-img  v-if="item.post_image !==null" max-height="150" :src="`http://127.0.0.1:8000${item.post_image}`" ></v-img>
+                            <v-img  v-if="item.post_image !==null" max-height="150" :src= static_url(item.post_image) ></v-img>
                               <v-fade-transition>
                                 <v-overlay
                                   v-if="hover"
@@ -235,7 +235,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { mapState, mapActions } from 'vuex'
-import { getAPI } from '../axios-api'
+import { getAPI, baseURL } from '../axios-api'
 
   export default {
     name: 'Actu',
@@ -292,6 +292,11 @@ import { getAPI } from '../axios-api'
       ...mapGetters([ 'memberMission']),
       verifMember() {
         return this.memberMission(this.$route.params.id)
+      },
+      static_url() {
+        return item => {
+          return `${baseURL}${item}`
+        }
       }
     },  
 

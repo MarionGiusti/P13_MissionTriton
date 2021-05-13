@@ -32,7 +32,7 @@
             </v-card-title>
             <v-divider class="mx-8"></v-divider>
             <v-card-text>
-              <v-img v-if="item.post_image !==null" contain max-width="800px" :src= "`http://127.0.0.1:8000${item.post_image}`" ></v-img>
+              <v-img v-if="item.post_image !==null" contain max-width="800px" :src= static_url(item.post_image)></v-img>
               <br/>
               {{ item.content }}
               <br/>
@@ -185,7 +185,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { getAPI } from '../axios-api'
+import { getAPI, baseURL } from '../axios-api'
 
   export default {
     name: 'Post',
@@ -226,7 +226,12 @@ import { getAPI } from '../axios-api'
       ...mapGetters([ 'memberMission']),
       verifMember() {
         return this.memberMission(this.$route.params.id)
-      } 
+      },
+      static_url() {
+        return item => {
+          return `${baseURL}${item}`
+        }
+      }
     },
 
     methods: {
