@@ -39,7 +39,7 @@
             title: "Vulgariser vos missions"
           },
           {
-            src:require("../assets/jermaine-unsplash.jpg"),
+            src:require("../assets/sofia-zubiria-unsplash.jpg"),
             title: "Et faites nous rêver ..."
           },
         ]
