@@ -61,6 +61,7 @@
                     fab
                     outlined
                     @click="deletePicture(item.id)"
+                    v-if="verifMember == true"
                   >
                     <v-icon
                     >

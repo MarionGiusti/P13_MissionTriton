@@ -13,8 +13,8 @@ urlpatterns = [
     path('api/missions/', include('apps.missions.urls')),
     path('api/posts/', include('apps.posts.urls')),
     path('api/schedules/', include('apps.schedules.urls')),
-    path('api-token-auth/', CustomAuthToken.as_view()),
-    path('dj-rest-auth/', include('dj_rest_auth.urls')),
-    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('api/api-token-auth/', CustomAuthToken.as_view()),
+    path('api/dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('api/dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
 
 ] + static(settings.STATIC_URL) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from django.db.models import Q
 
-from apps.users.permissions import IsScheduleOwnerOrReadOnly
+from apps.users.permissions import IsScheduleOwner
 from apps.users.models import CustomUser
 from apps.missions.models import Mission
 from .serializers import ScheduleSerializer
@@ -14,7 +14,7 @@ class ScheduleViewSet(viewsets.ModelViewSet):
     """
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
-    permission_classes = (IsScheduleOwnerOrReadOnly,)
+    permission_classes = (IsScheduleOwner,)
 
     def create(self, request, *args, **kwargs):
         user = CustomUser.objects.get(id = request.user.id)

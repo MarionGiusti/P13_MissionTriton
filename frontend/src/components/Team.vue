@@ -157,12 +157,7 @@ import { getAPI, baseURL } from '../axios-api'
     methods:{
       async load_team(){
         let miss = this.$route.params.id;
-        const data = await getAPI.get(`/api/users/missionusers/get_team/?missionId=${miss}`, 
-          {
-          headers: { 
-            'Authorization': 'Token ' + this.$store.state.token,
-          }
-        });
+        const data = await getAPI.get(`/api/users/missionusers/get_team/?missionId=${miss}`);
         this.team = data.data;
       },
 

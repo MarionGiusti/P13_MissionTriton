@@ -123,7 +123,7 @@ export default new Vuex.Store({
 
   actions: {
     async userLogin({ commit }, usercredentials) {
-      const { data } = await getAPI.post('/api-token-auth/', {
+      const { data } = await getAPI.post('api/api-token-auth/', {
           username: usercredentials.username,
           password: usercredentials.password
         })
@@ -133,7 +133,7 @@ export default new Vuex.Store({
     },
 
     async userRegister({ commit }, usercredentials) {
-      const { data } = await getAPI.post('/dj-rest-auth/registration/', {
+      const { data } = await getAPI.post('api/dj-rest-auth/registration/', {
         username: usercredentials.username,
         password1: usercredentials.password1,
         password2: usercredentials.password2,
@@ -155,7 +155,7 @@ export default new Vuex.Store({
     },
 
     async userLogout({ commit }) {
-      // await getAPI.post("/dj-rest-auth/logout/", {
+      // await getAPI.post("api/dj-rest-auth/logout/", {
       // })
       localStorage.removeItem('userId')
       localStorage.removeItem('token')

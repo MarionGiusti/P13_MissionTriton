@@ -26,6 +26,7 @@
                 icon
                 outlined
                 @click="selectItem(item); dialog_update=true"
+                v-if="verifMember == true"
               >
                 <v-icon> mdi-grease-pencil </v-icon>
               </v-btn>

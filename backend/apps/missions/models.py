@@ -25,7 +25,6 @@ class TimeLine(models.Model):
     end_date = models.DateField(null=True, blank=True)
     color = models.CharField(max_length=7, default="#B6885D", null=True)
 
-
     def __str__(self):
         """Method to change the object name in QuerySet """
         return f'{self.mission.name} {self.name}'
