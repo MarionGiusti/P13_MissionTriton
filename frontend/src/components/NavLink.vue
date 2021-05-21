@@ -89,8 +89,12 @@
         <v-list>
           <v-list-item
             v-for="(item, i) in items"
-            :key="i" router :to="{name: item.route, params: {userId: userId}}" @click="item.action !=''"
+            :key="i" router :to="{name: item.route, params: {userId: userId}}" @click="item.action"
           >
+          <!-- <v-list-item
+            v-for="(item, i) in items"
+            :key="i" @click="item.action"
+          > -->
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>

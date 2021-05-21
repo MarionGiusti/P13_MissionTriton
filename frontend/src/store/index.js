@@ -57,13 +57,17 @@ export default new Vuex.Store({
     //   return missionNameUser.includes(missionName)
     // }
     memberMission:(state, getters)=> (id) => {
-      var missionNameUser = []
-      for (const mission in state.userDetails.missions) {
-        var miss = state.userDetails.missions[mission].name
-        console.log('mission', miss)
-        missionNameUser.push(miss)
-      }  
-      return missionNameUser.includes(getters.currentMission(id)["name"])
+      if (!state.userDetails.missions) {
+        return
+      } 
+      // let missionNameUser = []
+      // for (const mission in state.userDetails.missions) {
+      //   let miss = state.userDetails.missions[mission].name
+      //   console.log('mission', miss)
+      //   missionNameUser.push(miss)
+      // } 
+
+      return state.userDetails.missions.map(mission=> mission.name).includes(getters.currentMission(id).name)
     }
   },
 
@@ -157,15 +161,15 @@ export default new Vuex.Store({
     async userLogout({ commit }) {
       // await getAPI.post("api/dj-rest-auth/logout/", {
       // })
-      localStorage.removeItem('userId')
-      localStorage.removeItem('token')
-      const { data }  = {
+      console.log("LOCAL STORAGE", localStorage.getItem('token'));
+      const data = {
         userId: null,
         token: null
       }
-      console.log(data, 'local', localStorage)
-      commit('setTokenId', data)
       console.log("action userLogout, logoutData:", data)
+      commit('setTokenId', data)
+      localStorage.removeItem('userId')
+      localStorage.removeItem('token')
     },
 
     async patchUserProfile({ commit, state }, usercredentials) {

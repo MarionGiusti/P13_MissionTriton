@@ -8,7 +8,7 @@ from apps.users.views import CustomAuthToken
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('rest_framework.urls', namespace='rest_framework')),
+    # path('', include('rest_framework.urls', namespace='rest_framework')),
     path('api/users/', include('apps.users.urls')),
     path('api/missions/', include('apps.missions.urls')),
     path('api/posts/', include('apps.posts.urls')),
