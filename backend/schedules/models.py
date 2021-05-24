@@ -4,7 +4,7 @@ Define model Schedule
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from apps.missions.models import Mission
+from missions.models import Mission
 
 class Schedule(models.Model):
     """ Class Schedule for each event in user calendar """

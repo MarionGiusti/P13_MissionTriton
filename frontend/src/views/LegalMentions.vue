@@ -8,6 +8,6 @@
 
 <script>
 export default {
-  name: 'LegalMentions',
-}
+  name: "LegalMentions"
+};
 </script>

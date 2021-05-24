@@ -2,12 +2,7 @@
   <v-main>
     <v-container>
       <div class="form-wrap" align="center" justify="center">
-        <v-form 
-        class="form-login"
-        ref="form"
-        v-model="valid"
-        lazy-validation
-        >
+        <v-form class="form-login" ref="form" v-model="valid" lazy-validation>
           <v-text-field
             label="Username"
             prepend-icon="mdi-account-circle"
@@ -27,17 +22,15 @@
             @click:append="show = !show"
           />
         </v-form>
-        <v-btn 
+        <v-btn
           class="btn mx-4"
           :disabled="!valid"
-          outlined @click="login(form)"
+          outlined
+          @click="login(form)"
         >
           Se connecter
         </v-btn>
-        <v-btn
-          class="btn  mx-4"
-          outlined to="/register"
-        >
+        <v-btn class="btn  mx-4" outlined to="/register">
           Nous rejoindre
         </v-btn>
       </div>
@@ -46,48 +39,47 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex";
 
 export default {
-  name: 'Login',
-  components: {
-  },
+  name: "Login",
+  components: {},
 
-  data () {
+  data() {
     return {
       form: {
-        username:"",
-        password:""
+        username: "",
+        password: ""
       },
       show: false,
-      valid: false,
-    }
+      valid: false
+    };
   },
 
   methods: {
-    ...mapActions(['userLogin']),
-    async login ({username, password}) {
+    ...mapActions(["userLogin"]),
+    async login({ username, password }) {
       if (this.$refs.form.validate()) {
         try {
-          await this.userLogin({ username, password })
-          this.$router.push('/')
-          this.$store.dispatch('getUserDetails')
-        } catch(err) {
-            console.log(`erreur: ${err}`)
+          await this.userLogin({ username, password });
+          this.$router.push("/");
+          this.$store.dispatch("getUserDetails");
+        } catch (err) {
+          console.log(`erreur: ${err}`);
         }
       }
     }
-  },
-}
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-  .form-wrap {
-    width: 60%;
-    margin: auto;
-  }
+.form-wrap {
+  width: 60%;
+  margin: auto;
+}
 
-  .btn {
-    color: rgb(60, 173, 173); 
-  }
+.btn {
+  color: rgb(60, 173, 173);
+}
 </style>

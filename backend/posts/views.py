@@ -4,9 +4,9 @@ from rest_framework.decorators import action
 from rest_framework import status
 from django.db.models import Q
 
-from apps.users.permissions import IsMissionMemberOrReadOnly
-from apps.users.models import MissionUser
-from apps.missions.models import Mission
+from users.permissions import IsMissionMemberOrReadOnly
+from users.models import MissionUser
+from missions.models import Mission
 from .serializers import PostSerializer, PictureSerializer
 from .models import Post, Picture
 

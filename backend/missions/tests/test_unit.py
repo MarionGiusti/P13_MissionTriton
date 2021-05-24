@@ -5,9 +5,9 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from apps.users.models import CustomUser, MissionUser
-from apps.missions.models import Mission, TimeLine
-from apps.missions.serializers import MissionSerializer, TimeLineSerializer
+from users.models import CustomUser, MissionUser
+from missions.models import Mission, TimeLine
+from missions.serializers import MissionSerializer, TimeLineSerializer
 
 from .test_setup import TestMissionSetUp, TestTimeLineSetUp
 

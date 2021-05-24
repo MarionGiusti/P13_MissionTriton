@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from .models import Schedule
-from apps.users.serializers import MissionUserSerializer
-from apps.missions.serializers import MissionSerializer
+from users.serializers import MissionUserSerializer
+from missions.serializers import MissionSerializer
 
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:

@@ -7,11 +7,16 @@ from django.core.files import File
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from django.contrib.auth import get_user_model
-from apps.users.models import CustomUser, MissionUser
-from apps.users.serializers import UserSerializer, MissionUserSerializer
+from users.models import CustomUser, MissionUser
+from users.serializers import UserSerializer, MissionUserSerializer
 
-from apps.missions.models import Mission
+from missions.models import Mission
 from .test_setup import TestUserSetUp, TestMissionUserSetUp
+
+from PIL import Image
+from django.core.files.uploadedfile import SimpleUploadedFile
+import io
+
 
 class TestUser(TestUserSetUp):
     def test_user_cannot_register_with_no_data(self):
@@ -164,6 +169,30 @@ class TestUser(TestUserSetUp):
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # def test_user_picture_edit_with_owner_authenticated(self):
+    #     # tmp_file = SimpleUploadedFile("file.jpg", "file_content", content_type="image/jpg")
+    #     self.client.post(self.register_url, self.user_register_data, format='json')
+
+    #     file = io.BytesIO()
+    #     image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))
+    #     image.save(file, 'png')
+    #     file.name = 'test.png'
+    #     file.seek(0)
+
+    #     profile_image = file
+
+    #     import pdb
+    #     pdb.set_trace()
+        
+    #     token = Token.objects.get(user__username=self.user_register_data['username'])
+
+    #     response = self.client.post('/api/users/profile_picture/', {"profile_image": profile_image},  
+    #         headers=self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key), 
+    #         content_type = 'multipart/form-data')
+
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 class TestMissionUser(TestMissionUserSetUp):
     def test_missionuser_created_automatically(self):

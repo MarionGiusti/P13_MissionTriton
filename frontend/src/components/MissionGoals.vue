@@ -1,33 +1,33 @@
 <template>
   <v-container>
     <div class="mx-8">
-      <v-card
-        class="mx-auto post-wrap"
-        flat
-      >
+      <v-card class="mx-auto post-wrap" flat>
         <v-img
           class="white--text align-end"
           height="200px"
-          src= "../assets/compass.jpg"
+          src="../assets/compass.jpg"
         >
-          <v-card-title class="black--text card-title"><v-spacer></v-spacer>
+          <v-card-title class="black--text card-title"
+            ><v-spacer></v-spacer>
             <div>
-              <h4>Navire : {{ missionD.ship_name }} <br/>
-              Du {{ missionD.start_date }} au {{ missionD.end_date }}</h4>
+              <h4>
+                Navire : {{ missionD.ship_name }} <br />
+                Du {{ missionD.start_date }} au {{ missionD.end_date }}
+              </h4>
             </div>
           </v-card-title>
         </v-img>
-        
+
         <v-card-text class="post-wrap">
           <v-row>
             <v-col>
               <div class="text-end">
                 <v-btn
-                  class="mb-4" 
+                  class="mb-4"
                   icon
                   outlined
                   color="#54658C"
-                  @click="dialog=true"
+                  @click="dialog = true"
                   v-if="verifMember == true"
                 >
                   <v-icon>
@@ -39,21 +39,18 @@
           </v-row>
           <v-row>
             <v-col>
-          {{ missionD.description }}
+              {{ missionD.description }}
             </v-col>
           </v-row>
         </v-card-text>
       </v-card>
 
-    <!-- dialog -->
+      <!-- dialog -->
       <div class="text-center">
-        <v-dialog
-          v-model="dialog"
-          max-width="800"
-        >
+        <v-dialog v-model="dialog" max-width="800">
           <v-card>
-            <v-container>            
-              <v-form 
+            <v-container>
+              <v-form
                 ref="form"
                 v-model="valid"
                 lazy-validation
@@ -135,20 +132,16 @@
                   v-model="missionD.description"
                 ></v-textarea>
               </v-form>
-              <v-btn 
+              <v-btn
                 text
-                @click.stop="dialog=false"
+                @click.stop="dialog = false"
                 @click="updateMission(missionD)"
                 :disabled="!valid"
                 color="teal"
               >
                 Modifier
               </v-btn>
-              <v-btn
-                text
-                @click.stop="dialog = false"
-                color="teal"
-              >
+              <v-btn text @click.stop="dialog = false" color="teal">
                 Fermer
               </v-btn>
             </v-container>
@@ -160,54 +153,59 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { getAPI } from '../axios-api'
+import { mapGetters } from "vuex";
+import { getAPI } from "../axios-api";
 
-  export default {
-    name: 'MissionGoals',
-    data() {
-      return {
-        dateRules: [
-          v => !!v ,
-          v => (v && v > this.missionD.start_date) || 'Date de fin avant date début',
-        ],
-        dialog: false,
-        menu1: false,
-        menu2: false,
-        valid: false,
-      }
-    },
-    
-    computed: {
-      ...mapGetters([ 'currentMission' ]),
-      missionD() {
-        return this.currentMission(this.$route.params.id)
-      },
-      ...mapGetters([ 'memberMission']),
-      verifMember() {
-        return this.memberMission(this.$route.params.id)
-      } 
-    },
+export default {
+  name: "MissionGoals",
+  data() {
+    return {
+      dateRules: [
+        v => !!v,
+        v =>
+          (v && v > this.missionD.start_date) || "Date de fin avant date début"
+      ],
+      dialog: false,
+      menu1: false,
+      menu2: false,
+      valid: false
+    };
+  },
 
-    methods:{
-      async updateMission(missioncredentials) {
-        console.log('UPDATE MISSION', missioncredentials)
-        await getAPI.patch(`api/missions/${missioncredentials.id}/`, {         
-            name: missioncredentials.name,
-            ship_name: missioncredentials.ship,
-            start_date: missioncredentials.start_date,
-            end_date: missioncredentials.end_date,
-            description: missioncredentials.description,
-        }, {
-        headers: { 'Authorization': 'Token ' + this.$store.state.token }})
-      },
+  computed: {
+    ...mapGetters(["currentMission"]),
+    missionD() {
+      return this.currentMission(this.$route.params.id);
+    },
+    ...mapGetters(["memberMission"]),
+    verifMember() {
+      return this.memberMission(this.$route.params.id);
+    }
+  },
+
+  methods: {
+    async updateMission(missioncredentials) {
+      console.log("UPDATE MISSION", missioncredentials);
+      await getAPI.patch(
+        `api/missions/${missioncredentials.id}/`,
+        {
+          name: missioncredentials.name,
+          ship_name: missioncredentials.ship,
+          start_date: missioncredentials.start_date,
+          end_date: missioncredentials.end_date,
+          description: missioncredentials.description
+        },
+        {
+          headers: { Authorization: "Token " + this.$store.state.token }
+        }
+      );
     }
   }
-
+};
 </script>
 
 <style lang="scss" scoped>
-  .post-wrap {
-    background-color:#A3B3D5;
-  }
+.post-wrap {
+  background-color: #a3b3d5;
+}
 </style>

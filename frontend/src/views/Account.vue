@@ -4,27 +4,20 @@
       <v-hover>
         <template v-slot:default="{ hover }">
           <div class="top-back">
-            <v-img
-              height="300px"
-              :src= userDetails.profile_background_image>
+            <v-img height="300px" :src="userDetails.profile_background_image">
               <v-fade-transition>
-                <v-overlay
-                  v-if="hover"
-                  absolute
-                  color="#8c9297"
-                >
-                  <v-btn
-                    icon
-                    fab
-                    outlined
-                    @click="$refs.inputUpload.click()"    
-                  >
-                    <v-icon
-                    >
-                    mdi-camera
+                <v-overlay v-if="hover" absolute color="#8c9297">
+                  <v-btn icon fab outlined @click="$refs.inputUpload.click()">
+                    <v-icon>
+                      mdi-camera
                     </v-icon>
                   </v-btn>
-                  <input type="file" v-show="false" ref="inputUpload" @change="onFileSelected($event, 1)">
+                  <input
+                    type="file"
+                    v-show="false"
+                    ref="inputUpload"
+                    @change="onFileSelected($event, 1)"
+                  />
                 </v-overlay>
               </v-fade-transition>
             </v-img>
@@ -34,37 +27,32 @@
       <div class="bottom-back">
         <v-hover>
           <template v-slot:default="{ hover }">
-            <v-sheet
-              color="white"
-              elevation="12"
-              height="100"
-              width="100"
-            >
+            <v-sheet color="white" elevation="12" height="100" width="100">
               <v-avatar
                 color="grey"
                 size="230"
                 tile
                 :class="{ 'on-hover': hover }"
               >
-                <v-img :src= userDetails.profile_image >
+                <v-img :src="userDetails.profile_image">
                   <v-fade-transition>
-                    <v-overlay
-                      v-if="hover"
-                      absolute
-                      color="#8c9297"
-                    >
+                    <v-overlay v-if="hover" absolute color="#8c9297">
                       <v-btn
                         icon
                         fab
                         outlined
                         @click="$refs.inputUpload.click()"
                       >
-                        <v-icon
-                        >
-                        mdi-camera
+                        <v-icon>
+                          mdi-camera
                         </v-icon>
                       </v-btn>
-                      <input type="file" v-show="false" ref="inputUpload" @change="onFileSelected($event, 0)">
+                      <input
+                        type="file"
+                        v-show="false"
+                        ref="inputUpload"
+                        @change="onFileSelected($event, 0)"
+                      />
                     </v-overlay>
                   </v-fade-transition>
                 </v-img>
@@ -80,14 +68,14 @@
         <div class="d-flex flex-column row-wrap-profile">
           <div class="mb-4">
             <h2 class="text-center">Profil</h2>
-            <v-divider/>
+            <v-divider />
           </div>
           <div class="">
             <v-card class="card-user" color="#2AC9B2">
               <v-card-text>
                 <v-form class="form-login" ref="formUser" v-model="valid">
                   <v-text-field
-                    label= "Nom d'utilisateur"
+                    label="Nom d'utilisateur"
                     prepend-icon="mdi-account-circle"
                     type="text"
                     color="teal"
@@ -138,7 +126,6 @@
                     v-model="userDetails.researchgate_link"
                     :value="userDetails.researchgate_link"
                   />
-
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -163,26 +150,30 @@
           </div>
         </div>
       </div>
-      <div class="d-flex flex-row" v-if="userDetails.missions && userDetails.missions.length != 0">
+      <div
+        class="d-flex flex-row"
+        v-if="userDetails.missions && userDetails.missions.length != 0"
+      >
         <div class="d-flex flex-column row-wrap-mission">
           <div class="mb-4">
-            <h2 class="text-center">Missions </h2>
-            <v-divider/>
+            <h2 class="text-center">Missions</h2>
+            <v-divider />
           </div>
-          
-          <div class="d-flex flex-row flex-wrap justify-space-between" >
+
+          <div class="d-flex flex-row flex-wrap justify-space-between">
             <div class="">
               <v-card class="card-mission" color="#2AC9B2">
                 <v-card-text>
-                  <v-list-item-group
-                    color="#002D26"
-                  >
+                  <v-list-item-group color="#002D26">
                     <v-list-item
                       v-for="(mission, i) in userDetails.missions"
-                      :key="i" @click="showSelectedMission(mission.id)"
+                      :key="i"
+                      @click="showSelectedMission(mission.id)"
                     >
                       <v-list-item-content>
-                        <v-list-item-title v-text="mission.name"></v-list-item-title>
+                        <v-list-item-title
+                          v-text="mission.name"
+                        ></v-list-item-title>
                       </v-list-item-content>
                     </v-list-item>
                   </v-list-item-group>
@@ -195,7 +186,7 @@
                 <v-card-text>
                   <v-form class="form-login" ref="formMission" v-model="valid">
                     <v-text-field
-                      label= "Job"
+                      label="Job"
                       type="text"
                       color="teal"
                       v-model="missionUserDetails.job"
@@ -209,7 +200,6 @@
                       v-model="missionUserDetails.team_lab"
                       :value="missionUserDetails.team_lab"
                       :counter="200"
-
                     />
                     <v-textarea
                       label="Description"
@@ -221,15 +211,15 @@
                   </v-form>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn 
+                  <v-btn
                     class="btn"
                     :disabled="!valid"
-                    outlined 
+                    outlined
                     @click="patchMissionUser(missionUserDetails)"
                   >
                     Modifier
                   </v-btn>
-                  <v-btn 
+                  <v-btn
                     class="btn"
                     :disabled="!valid"
                     outlined
@@ -248,47 +238,43 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
-import { mapActions } from 'vuex'
+import { mapState } from "vuex";
+import { mapActions } from "vuex";
 
 // import { mapFields } from 'vuex-map-fields'
-import { getAPI } from '../axios-api'
+import { getAPI } from "../axios-api";
 
 export default {
-  name: 'Account',
-  components: {
-  },
+  name: "Account",
+  components: {},
   data() {
     return {
       overlay: false,
       valid: false,
       selectedFile: null,
       card_mission: false,
-      missionId: "",
-    }
+      missionId: ""
+    };
   },
-  
+
   mounted() {
-    this.initialise()
+    this.initialise();
   },
-  
+
   computed: {
     // ...mapFields([
     //   'userDetails',
     //   'missionUserDetails'
     // ]),
-    ...mapState([
-      'userDetails',
-      'missionUserDetails'
-    ]),
+    ...mapState(["userDetails", "missionUserDetails"]),
     userpic() {
       return this.$store.state.userDetails.profile_image;
     }
   },
 
   methods: {
-    initialise(){
-      this.$store.dispatch('getUserDetails');
+    initialise() {
+      this.$store.dispatch("getUserDetails");
     },
 
     showSelectedMission(missionItem) {
@@ -307,134 +293,148 @@ export default {
     },
     onUpload() {
       const fd = new FormData();
-      fd.append('file', this.selectedFile, this.selectedFile.name);
+      fd.append("file", this.selectedFile, this.selectedFile.name);
       try {
-        getAPI.post('/api/users/profile_picture/', fd, {
-          headers: { 
-            'Authorization': 'Token ' + this.$store.state.token,
-            'Content-Type': 'multipart/form-data',   
+        getAPI.post("/api/users/profile_picture/", fd, {
+          headers: {
+            Authorization: "Token " + this.$store.state.token,
+            "Content-Type": "multipart/form-data"
           }
         });
-        this.$store.dispatch('getUserDetails');
-      } catch(err) {
-          console.log(`erreur: ${err}`)
+        this.$store.dispatch("getUserDetails");
+      } catch (err) {
+        console.log(`erreur: ${err}`);
       }
     },
     onUploadBackground() {
       const fd = new FormData();
-      fd.append('file', this.selectedFile, this.selectedFile.name)
+      fd.append("file", this.selectedFile, this.selectedFile.name);
       try {
-        getAPI.post('/api/users/background_picture/', fd, {
-          headers: { 
-            'Authorization': 'Token ' + this.$store.state.token,
-            'Content-Type': 'multipart/form-data',   
+        getAPI.post("/api/users/background_picture/", fd, {
+          headers: {
+            Authorization: "Token " + this.$store.state.token,
+            "Content-Type": "multipart/form-data"
           }
         });
-        this.$store.dispatch('getUserDetails');
-      } catch(err) {
-          console.log(`erreur: ${err}`)
+        this.$store.dispatch("getUserDetails");
+      } catch (err) {
+        console.log(`erreur: ${err}`);
       }
     },
 
-    ...mapActions(['patchUserProfile']),
-    async patchUser({username, first_name, last_name, email, linkedin_link, researchgate_link}) {
+    ...mapActions(["patchUserProfile"]),
+    async patchUser({
+      username,
+      first_name,
+      last_name,
+      email,
+      linkedin_link,
+      researchgate_link
+    }) {
       if (this.$refs.formUser.validate()) {
         try {
-          await this.patchUserProfile({ username, first_name, last_name, email, linkedin_link, researchgate_link });
-        } catch(err) {
-          console.log(`erreur: ${err}`)
+          await this.patchUserProfile({
+            username,
+            first_name,
+            last_name,
+            email,
+            linkedin_link,
+            researchgate_link
+          });
+        } catch (err) {
+          console.log(`erreur: ${err}`);
         }
       }
     },
-    ...mapActions(['patchMissionUserProfile']),
-    async patchMissionUser({job, team_lab, description}) {
+    ...mapActions(["patchMissionUserProfile"]),
+    async patchMissionUser({ job, team_lab, description }) {
       if (this.$refs.formMission.validate()) {
         try {
-          await this.patchMissionUserProfile({job, team_lab, description});
-        } catch(err) {
-          console.log(`erreur: ${err}`)
+          await this.patchMissionUserProfile({ job, team_lab, description });
+        } catch (err) {
+          console.log(`erreur: ${err}`);
         }
-      } 
+      }
     },
 
-    ...mapActions(['getListMissionUsers']),
-    async getMissionUserDetails(missionId){
+    ...mapActions(["getListMissionUsers"]),
+    async getMissionUserDetails(missionId) {
       await this.getListMissionUsers(missionId);
     },
 
-    async deleteMissionUser(id){
+    async deleteMissionUser(id) {
       await getAPI.delete(`/api/users/missionusers/${id}/`, {
-        headers: { 'Authorization': 'Token ' + this.$store.state.token,}
+        headers: { Authorization: "Token " + this.$store.state.token }
       });
       this.card_mission = false;
       this.initialise();
     },
 
-    async deleteUser(id){
-      this.$router.push('/');
+    async deleteUser(id) {
+      this.$router.push("/");
       this.logout();
       await getAPI.delete(`/api/users/${id}/`, {
-        headers: { 'Authorization': 'Token ' + this.$store.state.token,}
+        headers: { Authorization: "Token " + this.$store.state.token }
       });
     },
 
-    logout () {
-      this.$store.dispatch('userLogout');
-    },
+    logout() {
+      this.$store.dispatch("userLogout");
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-  .background-wrap {
-    background-color:#03584B;
-    width: 95%;
-  }
+.background-wrap {
+  background-color: #03584b;
+  width: 95%;
+}
 
-  .bottom-back {
-    margin-top: -60px;
-    margin-left: 60px;
-  }
+.bottom-back {
+  margin-top: -60px;
+  margin-left: 60px;
+}
 
+.row-wrap-profile {
+  width: 60%;
+}
+
+@media all and (max-width: 960px) {
   .row-wrap-profile {
-    width: 60%;
-  }
-
-  @media all and (max-width: 960px) {
-    .row-wrap-profile {
-      width: 90%;
-    }
-  }
-
-  .card-user {
-    margin: auto;
     width: 90%;
   }
+}
 
-  .row-wrap-mission {
-    width: 80%;
-  }
+.card-user {
+  margin: auto;
+  width: 90%;
+}
 
-  .card-mission {
-    margin: auto;
-    margin-left: 10%;
-    width: 100%;
-  }
+.row-wrap-mission {
+  width: 80%;
+}
 
+.card-mission {
+  margin: auto;
+  margin-left: 10%;
+  width: 100%;
+}
+
+.card-mission-details {
+  margin: auto;
+  width: 700px;
+}
+
+@media all and (max-width: 960px) {
   .card-mission-details {
     margin: auto;
-    width: 700px;
+    width: 300px;
   }
+}
 
-  @media all and (max-width: 960px) {
-    .card-mission-details {
-      margin: auto;
-      width: 300px;
-    }
-  }
-
-  .form-login {
-    width: 85%;
-    margin: auto;
-  }
+.form-login {
+  width: 85%;
+  margin: auto;
+}
 </style>

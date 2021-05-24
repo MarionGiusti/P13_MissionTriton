@@ -1,6 +1,6 @@
 from rest_framework import permissions
-from apps.users.models import MissionUser
-from apps.missions.models import Mission
+from users.models import MissionUser
+from missions.models import Mission
 
 class IsUserOwnerOrReadOnly(permissions.BasePermission):
     """

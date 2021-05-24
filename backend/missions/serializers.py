@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import Mission, TimeLine, ShipPosition
-from apps.users.serializers import MissionUserSerializer
+from users.serializers import MissionUserSerializer
 
 class MissionSerializer(serializers.ModelSerializer):
     class Meta:
