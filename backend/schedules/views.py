@@ -2,9 +2,9 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from django.db.models import Q
 
-from apps.users.permissions import IsScheduleOwner
-from apps.users.models import CustomUser
-from apps.missions.models import Mission
+from users.permissions import IsScheduleOwner
+from users.models import CustomUser
+from missions.models import Mission
 from .serializers import ScheduleSerializer
 from .models import Schedule
 

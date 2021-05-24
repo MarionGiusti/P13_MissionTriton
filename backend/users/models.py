@@ -4,7 +4,7 @@ Define models CustomUser and MissionUser
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from apps.missions.models import Mission
+from missions.models import Mission
 
 class CustomUser(AbstractUser):
     """ Class CustomUser to custom user model """

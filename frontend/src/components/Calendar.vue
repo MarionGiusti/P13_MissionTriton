@@ -1,165 +1,135 @@
 <template>
   <v-row class="fill-height">
-      <v-col>
-        <v-sheet height="64">
-          <v-toolbar
-            flat
+    <v-col>
+      <v-sheet height="64">
+        <v-toolbar flat>
+          <v-btn
+            color="#198F8F"
+            class="mr-4"
+            @click="
+              dialog = true;
+              selectMissionForm();
+            "
           >
-            <v-btn
-              color="#198F8F"
-              class="mr-4"
-              @click="dialog = true ; selectMissionForm()"
-            >
-              Nouvelle tâche
-            </v-btn>
-            <v-btn
-              outlined
-              class="mr-4 hidden-sm-and-down"
-              color="grey darken-2"
-              @click="setToday"
-            >
-              Today
-            </v-btn>
-            <v-btn
-              fab
-              text
-              small
-              color="grey darken-2"
-              @click="prev"
-            >
-              <v-icon small>
-                mdi-chevron-left
-              </v-icon>
-            </v-btn>
-            <v-btn
-              fab
-              text
-              small
-              color="grey darken-2"
-              @click="next"
-            >
-              <v-icon small>
-                mdi-chevron-right
-              </v-icon>
-            </v-btn>
-            <v-toolbar-title v-if="$refs.calendar" class="hidden-sm-and-down">
-              {{ $refs.calendar.title }}
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-menu
-              bottom
-              right
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  outlined
-                  color="grey darken-2"
-                  v-bind="attrs"
-                  v-on="on"
-                  class="hidden-sm-and-down"
-                >
-                  <span>{{ typeToLabel[type] }}</span>
-                  <v-icon right>
-                    mdi-menu-down
-                  </v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item @click="type = 'day'">
-                  <v-list-item-title>Day</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="type = 'week'">
-                  <v-list-item-title>Week</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="type = 'month'">
-                  <v-list-item-title>Month</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="type = '4day'">
-                  <v-list-item-title>4 days</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-toolbar>
-        </v-sheet>
-        <v-sheet height="600">
-          <v-calendar
-            ref="calendar"
-            v-model="focus"
-            color="teal"
-            :events="events"
-            :type="type"
-            @click:event="showEvent"
-            @click:more="viewDay"
-            @click:date="viewDay"
-          ></v-calendar>
-          <v-menu
-            v-model="selectedOpen"
-            :close-on-content-click="false"
-            :activator="selectedElement"
-            offset-x
+            Nouvelle tâche
+          </v-btn>
+          <v-btn
+            outlined
+            class="mr-4 hidden-sm-and-down"
+            color="grey darken-2"
+            @click="setToday"
           >
-            <v-card
-              color="grey lighten-4"
-              min-width="350px"
-              flat
-            >
-              <v-toolbar
-                :color="selectedEvent.color"
-                dark
+            Today
+          </v-btn>
+          <v-btn fab text small color="grey darken-2" @click="prev">
+            <v-icon small>
+              mdi-chevron-left
+            </v-icon>
+          </v-btn>
+          <v-btn fab text small color="grey darken-2" @click="next">
+            <v-icon small>
+              mdi-chevron-right
+            </v-icon>
+          </v-btn>
+          <v-toolbar-title v-if="$refs.calendar" class="hidden-sm-and-down">
+            {{ $refs.calendar.title }}
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-menu bottom right>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                outlined
+                color="grey darken-2"
+                v-bind="attrs"
+                v-on="on"
+                class="hidden-sm-and-down"
               >
-                <v-btn @click="deleteEvent(selectedEvent.id)" icon>
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-              </v-toolbar>
-
-              <v-card-text>
-                <v-form v-if="currentlyEditing !== selectedEvent.id">
-                  {{ selectedEvent.details }}
-                </v-form>
-                <v-form v-else>
-                  <v-textarea
-                    v-model="selectedEvent.details"
-                    type="text" 
-                    placeholder="ajouter détails">
-                  </v-textarea>
-                </v-form>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-btn
-                  text
-                  @click="selectedOpen = false"
-                >
-                  Fermer
-                </v-btn>
-                <v-btn
-                  text
-                  v-if="currentlyEditing !== selectedEvent.id"
-                  @click.prevent="editEvent(selectedEvent)"
-                >
-                  Modifier
-                </v-btn>
-                <v-btn
-                  text
-                  v-else
-                  @click.prevent="updateEvent(selectedEvent)"
-                >
-                  Enregistrer
-                </v-btn>
-              </v-card-actions>
-            </v-card>
+                <span>{{ typeToLabel[type] }}</span>
+                <v-icon right>
+                  mdi-menu-down
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="type = 'day'">
+                <v-list-item-title>Day</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="type = 'week'">
+                <v-list-item-title>Week</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="type = 'month'">
+                <v-list-item-title>Month</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="type = '4day'">
+                <v-list-item-title>4 days</v-list-item-title>
+              </v-list-item>
+            </v-list>
           </v-menu>
-        </v-sheet>
+        </v-toolbar>
+      </v-sheet>
+      <v-sheet height="600">
+        <v-calendar
+          ref="calendar"
+          v-model="focus"
+          color="teal"
+          :events="events"
+          :type="type"
+          @click:event="showEvent"
+          @click:more="viewDay"
+          @click:date="viewDay"
+        ></v-calendar>
+        <v-menu
+          v-model="selectedOpen"
+          :close-on-content-click="false"
+          :activator="selectedElement"
+          offset-x
+        >
+          <v-card color="grey lighten-4" min-width="350px" flat>
+            <v-toolbar :color="selectedEvent.color" dark>
+              <v-btn @click="deleteEvent(selectedEvent.id)" icon>
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+            </v-toolbar>
 
-        <!-- Add event dialog -->
-        <div class="text-center">
-          <v-dialog
-            v-model="dialog"
-            max-width="500"
-          >
-            <v-card>
-              <v-container>
+            <v-card-text>
+              <v-form v-if="currentlyEditing !== selectedEvent.id">
+                {{ selectedEvent.details }}
+              </v-form>
+              <v-form v-else>
+                <v-textarea
+                  v-model="selectedEvent.details"
+                  type="text"
+                  placeholder="ajouter détails"
+                >
+                </v-textarea>
+              </v-form>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn text @click="selectedOpen = false">
+                Fermer
+              </v-btn>
+              <v-btn
+                text
+                v-if="currentlyEditing !== selectedEvent.id"
+                @click.prevent="editEvent(selectedEvent)"
+              >
+                Modifier
+              </v-btn>
+              <v-btn text v-else @click.prevent="updateEvent(selectedEvent)">
+                Enregistrer
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
+      </v-sheet>
+
+      <!-- Add event dialog -->
+      <div class="text-center">
+        <v-dialog v-model="dialog" max-width="500">
+          <v-card>
+            <v-container>
               <v-form @submit.prevent="addEvent">
                 <v-text-field
                   label="Nom"
@@ -205,41 +175,40 @@
                   v-model="color"
                 />
               </v-form>
-              <v-btn 
+              <v-btn
                 color="teal"
                 text
                 outlined
                 class="mx-4"
-                @click.stop="dialog=false"
+                @click.stop="dialog = false"
                 @click="addEvent"
               >
                 Créer
               </v-btn>
-              <v-btn 
+              <v-btn
                 text
                 color="teal"
                 outlined
                 class="mx-4"
-                @click.stop="dialog=false"
+                @click.stop="dialog = false"
               >
                 Annuler
               </v-btn>
-              </v-container>
-             </v-card>
-          </v-dialog>
-        </div>
-      </v-col>
-    </v-row>
+            </v-container>
+          </v-card>
+        </v-dialog>
+      </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
-import {mapState} from 'vuex'
-import { getAPI } from '../axios-api'
+import { mapState } from "vuex";
+import { getAPI } from "../axios-api";
 
 export default {
-  name: 'Calendar',
-  components: {
-  },
+  name: "Calendar",
+  components: {},
 
   data: () => ({
     color: "",
@@ -248,7 +217,7 @@ export default {
     dialog: false,
     end: null,
     events: [],
-    focus: '',
+    focus: "",
     mission: null,
     name: null,
     selectedElement: null,
@@ -256,58 +225,60 @@ export default {
     selectMission: [],
     selectedOpen: false,
     start: null,
-    type: 'month',
+    type: "month",
     typeToLabel: {
-      month: 'Month',
-      week: 'Week',
-      day: 'Day',
-      '4day': '4 Days',
-    },
+      month: "Month",
+      week: "Week",
+      day: "Day",
+      "4day": "4 Days"
+    }
   }),
 
-  async mounted () {
+  async mounted() {
     this.$refs.calendar.checkChange();
     this.getEvents();
   },
 
-  computed:{
-    ...mapState([
-      'scheduleUserserDetails', 'userDetails'
-    ]),
+  computed: {
+    ...mapState(["scheduleUserserDetails", "userDetails"])
   },
 
   methods: {
-    selectMissionForm(){
+    selectMissionForm() {
       this.userDetails.missions.forEach(mission => {
-      let miss = mission.name;
-      this.selectMission.push(miss)
-      })
+        let miss = mission.name;
+        this.selectMission.push(miss);
+      });
     },
 
-    async getEvents(){
-      let events= [];
-      await this.$store.dispatch('getScheduleUser')
-      .then(() =>
+    async getEvents() {
+      let events = [];
+      await this.$store.dispatch("getScheduleUser").then(() =>
         this.$store.state.scheduleUserDetails.forEach(task => {
           let dataTask = task;
           events.push(dataTask);
-      }))
+        })
+      );
       this.events = events;
     },
-    
-    async addEvent(){
-      if(this.name && this.start && this.end) {
-        console.log('ooooo', this.color)
-        await getAPI.post(`/api/schedules/`, {
-          name: this.name ,
-          details: this.details,
-          start: this.start,
-          end: this.end,
-          mission: this.mission,
-          color: this.color
-        }, {
-          headers: { 'Authorization': 'Token ' + this.$store.state.token,}
-        });
+
+    async addEvent() {
+      if (this.name && this.start && this.end) {
+        console.log("ooooo", this.color);
+        await getAPI.post(
+          `/api/schedules/`,
+          {
+            name: this.name,
+            details: this.details,
+            start: this.start,
+            end: this.end,
+            mission: this.mission,
+            color: this.color
+          },
+          {
+            headers: { Authorization: "Token " + this.$store.state.token }
+          }
+        );
         this.getEvents();
         this.name = "";
         this.details = "";
@@ -316,70 +287,74 @@ export default {
         this.mission = "";
         this.color = "";
       } else {
-        alert('Name, start and date are required');
+        alert("Name, start and date are required");
       }
     },
 
-    async updateEvent(ev){
-      await getAPI.patch(`/api/schedules/${ev.id}/`, {
-        details: ev.details
-      }, {
-        headers: { 'Authorization': 'Token ' + this.$store.state.token,}
-      })
+    async updateEvent(ev) {
+      await getAPI.patch(
+        `/api/schedules/${ev.id}/`,
+        {
+          details: ev.details
+        },
+        {
+          headers: { Authorization: "Token " + this.$store.state.token }
+        }
+      );
       this.selectedOpen = false;
       this.currentlyEditing = null;
     },
 
-    async deleteEvent(ev){
-      console.log('chou', ev)
+    async deleteEvent(ev) {
+      console.log("chou", ev);
       await getAPI.delete(`/api/schedules/${ev}/`, {
-        headers: { 'Authorization': 'Token ' + this.$store.state.token,}
-      })
+        headers: { Authorization: "Token " + this.$store.state.token }
+      });
       this.selectedOpen = false;
       this.getEvents();
     },
 
-    viewDay ({ date }) {
+    viewDay({ date }) {
       this.focus = date;
-      this.type = 'day';
+      this.type = "day";
     },
 
-    getEventColor (event) {
-      return event.color
+    getEventColor(event) {
+      return event.color;
     },
 
-    setToday () {
-      this.focus = ''
+    setToday() {
+      this.focus = "";
     },
 
-    prev () {
-      this.$refs.calendar.prev()
+    prev() {
+      this.$refs.calendar.prev();
     },
-    next () {
-      this.$refs.calendar.next()
+    next() {
+      this.$refs.calendar.next();
     },
 
     editEvent(ev) {
       this.currentlyEditing = ev.id;
     },
 
-    showEvent ({ nativeEvent, event }) {
+    showEvent({ nativeEvent, event }) {
       const open = () => {
-        this.selectedEvent = event
-        this.selectedElement = nativeEvent.target
+        this.selectedEvent = event;
+        this.selectedElement = nativeEvent.target;
         setTimeout(() => {
-          this.selectedOpen = true
-        }, 10)
-      }
+          this.selectedOpen = true;
+        }, 10);
+      };
 
       if (this.selectedOpen) {
-        this.selectedOpen = false
-        setTimeout(open, 10)
+        this.selectedOpen = false;
+        setTimeout(open, 10);
       } else {
-        open()
+        open();
       }
 
-      nativeEvent.stopPropagation()
+      nativeEvent.stopPropagation();
     },
 
     // updateRange ({ start, end }) {
@@ -407,14 +382,11 @@ export default {
     //   this.events = events
     // },
 
-    rnd (a, b) {
-      return Math.floor((b - a + 1) * Math.random()) + a
-    },
-  },
- 
-}
+    rnd(a, b) {
+      return Math.floor((b - a + 1) * Math.random()) + a;
+    }
+  }
+};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

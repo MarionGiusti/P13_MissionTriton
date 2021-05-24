@@ -1,42 +1,42 @@
 <template>
   <v-app>
-    <NavLink/>
-      <router-view/>
+    <NavLink />
+    <router-view />
     <v-footer color="#A3D0CA">
-      <Footer/>
-    </v-footer> 
-  </v-app> 
+      <Footer />
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
-import NavLink from './components/NavLink.vue'
-import Footer from './components/Footer.vue'
-import {mapState} from 'vuex'
+import NavLink from "./components/NavLink.vue";
+import Footer from "./components/Footer.vue";
+import { mapState } from "vuex";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     NavLink,
-    Footer,
+    Footer
   },
 
   async mounted() {
-    await this.$store.dispatch('loadMissionList')
+    await this.$store.dispatch("loadMissionList");
 
     if (this.token) {
-      await this.$store.dispatch('getUserDetails')
+      await this.$store.dispatch("getUserDetails");
     }
   },
 
   computed: {
-    ...mapState(['token'])
+    ...mapState(["token"])
   }
 };
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200;400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@200;400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap");
 
 /* html, body {
   font-family: 'Dosis';
@@ -44,11 +44,11 @@ export default {
 } */
 
 h2 {
-  font: 500 40px  'Amatic SC' !important;
+  font: 500 40px "Amatic SC" !important;
 }
 
 #app {
-  font-family: 'Dosis';
+  font-family: "Dosis";
   font-weight: 400;
 }
 </style>

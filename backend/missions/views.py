@@ -1,10 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from apps.users.permissions import (
+from users.permissions import (
     IsMissionOwnerOrReadOnly,
     IsMissionMemberOrReadOnly)
-from apps.users.models import MissionUser
+from users.models import MissionUser
 from .serializers import (
     MissionSerializer,
     TimeLineSerializer,

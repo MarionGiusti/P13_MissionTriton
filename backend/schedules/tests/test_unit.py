@@ -5,10 +5,10 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from apps.users.models import CustomUser
-from apps.missions.models import Mission
-from apps.schedules.models import Schedule
-from apps.schedules.serializers import ScheduleSerializer
+from users.models import CustomUser
+from missions.models import Mission
+from schedules.models import Schedule
+from schedules.serializers import ScheduleSerializer
 
 from .test_setup import TestScheduleSetUp
 

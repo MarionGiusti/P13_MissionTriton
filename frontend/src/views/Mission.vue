@@ -8,28 +8,27 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import NavLink from '@/components/NavLink'
-import NavMission from '@/components/NavMission'
+import { mapGetters } from "vuex";
+import NavLink from "@/components/NavLink";
+import NavMission from "@/components/NavMission";
 
 export default {
-  name: 'Mission',
+  name: "Mission",
   components: {
     NavLink,
-    NavMission,
+    NavMission
   },
 
   beforeCreate() {
     try {
-      this.$store.dispatch('loadMissionList')
+      this.$store.dispatch("loadMissionList");
     } catch (err) {
-      console.log(`erreur: ${err}`)
+      console.log(`erreur: ${err}`);
     }
   },
 
   computed: {
-    ...mapGetters([ 'pastMissions', 'nowMissions', 'futureMissions' ]),
-  },
-
-}
+    ...mapGetters(["pastMissions", "nowMissions", "futureMissions"])
+  }
+};
 </script>

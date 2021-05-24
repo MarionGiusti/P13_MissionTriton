@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
-from apps.missions.models import Mission
+from missions.models import Mission
 from .permissions import IsMissionUserOwnerOrReadOnly, IsUserOwnerOrReadOnly
 from .serializers import UserSerializer, MissionUserSerializer
 from .models import CustomUser, MissionUser

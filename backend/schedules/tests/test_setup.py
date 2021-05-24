@@ -5,8 +5,8 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 
-from apps.missions.models import Mission
-from apps.users.models import CustomUser
+from missions.models import Mission
+from users.models import CustomUser
 
 class TestScheduleSetUp(APITestCase):
     def setUp(self):

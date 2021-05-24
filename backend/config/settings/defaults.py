@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
 
@@ -33,6 +34,10 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+# Apps are all located in apps/ in root directory
+# sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,10 +54,10 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'corsheaders',
-    'apps.users',
-    'apps.missions',
-    'apps.posts',
-    'apps.schedules',
+    'users',
+    'missions',
+    'posts',
+    'schedules',
     'django_cleanup.apps.CleanupConfig',
 ]
 

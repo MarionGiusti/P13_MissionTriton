@@ -3,13 +3,13 @@
     <div class="mx-8">
       <v-btn
         color="#198F8F"
-        @click="dialog = true "
+        @click="dialog = true"
         class="mb-4"
         v-if="verifMember == true"
       >
         Nouvel évènement
       </v-btn>
-      <v-timeline v-if="timelines.length !==0">
+      <v-timeline v-if="timelines.length !== 0">
         <v-timeline-item
           v-for="(event, i) in timelines"
           :key="i"
@@ -18,35 +18,55 @@
         >
           <template v-slot:opposite>
             <span
-              v-if="event.end_date==null"
+              v-if="event.end_date == null"
               class="font-weight-bold`"
               v-text="
-              new Date(event.start_date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+                new Date(event.start_date).toLocaleDateString('fr-FR', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })
               "
             ></span>
             <span
-              v-if="event.end_date!==null"
+              v-if="event.end_date !== null"
               class="font-weight-bold`"
-              v-text="`Du 
-              ${ 
-                new Date(event.start_date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-              }
-              au ${
-                new Date(event.end_date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-              }`"
+              v-text="
+                `Du 
+              ${new Date(event.start_date).toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+              au ${new Date(event.end_date).toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}`
+              "
             ></span>
           </template>
           <div class="py-4">
-            <v-btn @click="selectItem(event); dialog_update = true" text v-if="verifMember == true">
+            <v-btn
+              @click="
+                selectItem(event);
+                dialog_update = true;
+              "
+              text
+              v-if="verifMember == true"
+            >
               <h3 class="mb-4`">
-              {{event.name}}
+                {{ event.name }}
               </h3>
             </v-btn>
             <h3 class="mb-4`" v-if="verifMember == false">
-              {{event.name}}
+              {{ event.name }}
             </h3>
             <div>
-              {{event.description}}
+              {{ event.description }}
             </div>
           </div>
         </v-timeline-item>
@@ -54,202 +74,200 @@
 
       <!-- Add event timeline dialog -->
       <div class="text-center">
-        <v-dialog
-          v-model="dialog"
-          max-width="500"
-        >
+        <v-dialog v-model="dialog" max-width="500">
           <v-card>
             <v-container>
-            <v-form ref="form" v-model="valid" @submit.prevent="addTimeline">
-              <v-text-field
-                label="Titre"
-                type="text"
-                color="teal"
-                v-model="send_form.form.name"
-                required
-                :rules="[v => !!v || 'Item is required']"
-              />
-              <v-textarea
-                label="Détails"
-                type="text"
-                color="teal"
-                v-model="send_form.form.description"
-              ></v-textarea>
-              <v-menu
-                v-model="menu1"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
+              <v-form ref="form" v-model="valid" @submit.prevent="addTimeline">
+                <v-text-field
+                  label="Titre"
+                  type="text"
+                  color="teal"
+                  v-model="send_form.form.name"
+                  required
+                  :rules="[v => !!v || 'Item is required']"
+                />
+                <v-textarea
+                  label="Détails"
+                  type="text"
+                  color="teal"
+                  v-model="send_form.form.description"
+                ></v-textarea>
+                <v-menu
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="send_form.form.start_date"
+                      label="Date de début"
+                      prepend-icon="mdi-clock-start"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      color="teal"
+                      required
+                      :rules="[v => !!v || 'Item is required']"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
                     v-model="send_form.form.start_date"
-                    label="Date de début"
-                    prepend-icon="mdi-clock-start"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    color="teal"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="send_form.form.start_date"
-                  @input="menu1 = false"
-                ></v-date-picker>
-              </v-menu>
-              <v-menu
-                v-model="menu2"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
+                    @input="menu1 = false"
+                  ></v-date-picker>
+                </v-menu>
+                <v-menu
+                  v-model="menu2"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="send_form.form.end_date"
+                      label="Date de fin"
+                      prepend-icon="mdi-clock-end"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      color="teal"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
                     v-model="send_form.form.end_date"
-                    label="Date de fin"
-                    prepend-icon="mdi-clock-end"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    color="teal"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="send_form.form.end_date"
-                  @input="menu2 = false"
-                ></v-date-picker>
-              </v-menu>
-              <v-text-field
-                label="Couleur"
-                type="color"
+                    @input="menu2 = false"
+                  ></v-date-picker>
+                </v-menu>
+                <v-text-field
+                  label="Couleur"
+                  type="color"
+                  color="teal"
+                  v-model="send_form.form.color"
+                />
+              </v-form>
+              <v-btn
+                type="submit"
                 color="teal"
-                v-model="send_form.form.color"
-              />
-            </v-form>
-            <v-btn
-              type="submit"
-              color="teal"
-              :disabled="!valid"
-              class="mb-4"
-              text
-              @click.stop="dialog=false"
-              @click="addTimeline"
-            >
-              Créer
-            </v-btn>
-            <v-btn
-              text
-              @click.stop="dialog = false"
-              color="teal"
-              class="mb-4"
+                :disabled="!valid"
+                class="mb-4"
+                text
+                @click.stop="dialog = false"
+                @click="addTimeline"
+              >
+                Créer
+              </v-btn>
+              <v-btn
+                text
+                @click.stop="dialog = false"
+                color="teal"
+                class="mb-4"
               >
                 Fermer
               </v-btn>
             </v-container>
-            </v-card>
+          </v-card>
         </v-dialog>
       </div>
 
       <!-- Update event timeline dialog -->
       <div class="text-center">
-        <v-dialog
-          v-model="dialog_update"
-          max-width="500"
-        >
+        <v-dialog v-model="dialog_update" max-width="500">
           <v-card>
             <v-container>
-            <v-form ref="form" v-model="valid" @submit.prevent="updateTimeline">
-              <v-text-field
-                label="Titre"
-                type="text"
-                color="teal"
-                v-model="selectedItem.name"
-                required
-                :rules="[v => !!v || 'Item is required']"
-              />
-              <v-textarea
-                label="Détails"
-                type="text"
-                color="teal"
-                v-model="selectedItem.description"
-              ></v-textarea>
-              <v-menu
-                v-model="menu1"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
+              <v-form
+                ref="form"
+                v-model="valid"
+                @submit.prevent="updateTimeline"
               >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
+                <v-text-field
+                  label="Titre"
+                  type="text"
+                  color="teal"
+                  v-model="selectedItem.name"
+                  required
+                  :rules="[v => !!v || 'Item is required']"
+                />
+                <v-textarea
+                  label="Détails"
+                  type="text"
+                  color="teal"
+                  v-model="selectedItem.description"
+                ></v-textarea>
+                <v-menu
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="selectedItem.start_date"
+                      label="Date de début"
+                      prepend-icon="mdi-clock-start"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      required
+                      :rules="[v => !!v || 'Item is required']"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
                     v-model="selectedItem.start_date"
-                    label="Date de début"
-                    prepend-icon="mdi-clock-start"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    required
-                    :rules="[v => !!v || 'Item is required']"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="selectedItem.start_date"
-                  @input="menu1 = false"
-                ></v-date-picker>
-              </v-menu>
-              <v-menu
-                v-model="menu2"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
+                    @input="menu1 = false"
+                  ></v-date-picker>
+                </v-menu>
+                <v-menu
+                  v-model="menu2"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="selectedItem.end_date"
+                      label="Date de fin"
+                      prepend-icon="mdi-clock-end"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
                     v-model="selectedItem.end_date"
-                    label="Date de fin"
-                    prepend-icon="mdi-clock-end"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="selectedItem.end_date"
-                  @input="menu2 = false"
-                ></v-date-picker>
-              </v-menu>
-              <v-text-field
-                label="Couleur"
-                type="color"
-                color="teal"
-                v-model="selectedItem.color"
-              />
-            </v-form>
-            <v-btn 
-              text
-              @click.stop="dialog_update=false"
-              @click="updateTimeline(selectedItem)"
-            >
-              Modifier
-            </v-btn>
-            <v-btn 
-              text
-              @click.stop="dialog_update=false"
-              @click="deleteTimeline(selectedItem)"
-            >
-              Supprimer
-            </v-btn>
+                    @input="menu2 = false"
+                  ></v-date-picker>
+                </v-menu>
+                <v-text-field
+                  label="Couleur"
+                  type="color"
+                  color="teal"
+                  v-model="selectedItem.color"
+                />
+              </v-form>
+              <v-btn
+                text
+                @click.stop="dialog_update = false"
+                @click="updateTimeline(selectedItem)"
+              >
+                Modifier
+              </v-btn>
+              <v-btn
+                text
+                @click.stop="dialog_update = false"
+                @click="deleteTimeline(selectedItem)"
+              >
+                Supprimer
+              </v-btn>
             </v-container>
-            </v-card>
+          </v-card>
         </v-dialog>
       </div>
     </div>
@@ -257,87 +275,91 @@
 </template>
 
 <script>
-import { getAPI } from '../axios-api'
-import { mapGetters } from 'vuex'
+import { getAPI } from "../axios-api";
+import { mapGetters } from "vuex";
 
-  export default {
-    name: 'Timeline',
-    data() {
-      return {
-        dialog: false,
-        dialog_update:false,
-        menu1: false,
-        menu2: false,
-        send_form: {
-          form: {
-            name:"",
-            description:"",
-            start_date: "",
-            end_date:"",
-            color:"",
-          },
-          missionId: null,
+export default {
+  name: "Timeline",
+  data() {
+    return {
+      dialog: false,
+      dialog_update: false,
+      menu1: false,
+      menu2: false,
+      send_form: {
+        form: {
+          name: "",
+          description: "",
+          start_date: "",
+          end_date: "",
+          color: ""
         },
-        selectedItem: {},
-        timelines:{},
-        valid: false,
-     }
-    },
+        missionId: null
+      },
+      selectedItem: {},
+      timelines: {},
+      valid: false
+    };
+  },
 
   mounted() {
-    this.getTimelinesMission(this.$route.params.id)
+    this.getTimelinesMission(this.$route.params.id);
   },
 
   computed: {
-      ...mapGetters([ 'memberMission' ]),
-      verifMember() {
-        return this.memberMission(this.$route.params.id)
-      } 
-    },
+    ...mapGetters(["memberMission"]),
+    verifMember() {
+      return this.memberMission(this.$route.params.id);
+    }
+  },
 
-  methods:{
+  methods: {
     async getTimelinesMission(missionId) {
-      const data = await getAPI.get(`/api/missions/timelines/?missionid=${missionId}`)
-      this.timelines = data.data
+      const data = await getAPI.get(
+        `/api/missions/timelines/?missionid=${missionId}`
+      );
+      this.timelines = data.data;
     },
 
-    async addTimeline(){
-      this.send_form.missionId = this.$route.params.id
+    async addTimeline() {
+      this.send_form.missionId = this.$route.params.id;
       if (this.$refs.form.validate()) {
-        await getAPI.post('/api/missions/timelines/', 
-          this.send_form, {
-          headers: { 
-            'Authorization': 'Token ' + this.$store.state.token,
-            'Content-Type': 'application/json',   
+        await getAPI.post("/api/missions/timelines/", this.send_form, {
+          headers: {
+            Authorization: "Token " + this.$store.state.token,
+            "Content-Type": "application/json"
           }
-          })
-        await this.getTimelinesMission(this.$route.params.id)
+        });
+        await this.getTimelinesMission(this.$route.params.id);
       }
     },
 
     async updateTimeline(selectedItem) {
-        await getAPI.patch(`api/missions/timelines/${selectedItem.id}/`, {         
+      await getAPI.patch(
+        `api/missions/timelines/${selectedItem.id}/`,
+        {
           name: selectedItem.name,
           description: selectedItem.description,
           start_date: selectedItem.start_date,
           end_date: selectedItem.end_date,
           color: selectedItem.color
-        }, {
-        headers: { 'Authorization': 'Token ' + this.$store.state.token }})
-      },
+        },
+        {
+          headers: { Authorization: "Token " + this.$store.state.token }
+        }
+      );
+    },
 
-    async deleteTimeline({id}){
+    async deleteTimeline({ id }) {
       await getAPI.delete(`/api/missions/timelines/${id}/`, {
-        headers: { 'Authorization': 'Token ' + this.$store.state.token,}
-      })
-      await this.getTimelinesMission(this.$route.params.id)
+        headers: { Authorization: "Token " + this.$store.state.token }
+      });
+      await this.getTimelinesMission(this.$route.params.id);
     },
 
-    selectItem(item){
-      this.selectedItem = item
-    },
-
+    selectItem(item) {
+      this.selectedItem = item;
+    }
   }
-
-  }
+};
 </script>

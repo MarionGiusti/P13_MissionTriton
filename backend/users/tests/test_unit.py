@@ -7,10 +7,10 @@ from django.core.files import File
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from django.contrib.auth import get_user_model
-from apps.users.models import CustomUser, MissionUser
-from apps.users.serializers import UserSerializer, MissionUserSerializer
+from users.models import CustomUser, MissionUser
+from users.serializers import UserSerializer, MissionUserSerializer
 
-from apps.missions.models import Mission
+from missions.models import Mission
 from .test_setup import TestUserSetUp, TestMissionUserSetUp
 
 from PIL import Image

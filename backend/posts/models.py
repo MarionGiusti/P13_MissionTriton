@@ -3,8 +3,8 @@ Define model Post and Picture
 """
 from django.db import models
 
-from apps.users.models import MissionUser
-from apps.missions.models import Mission
+from users.models import MissionUser
+from missions.models import Mission
 
 
 class Post(models.Model):
