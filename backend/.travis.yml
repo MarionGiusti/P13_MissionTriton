@@ -8,8 +8,8 @@ addons:
   firefox: latest
 
 before_script:
-  - pip install -r requirements.txt
   - cd ./backend/
+  - pip install -r requirements.txt
 
 branches:
   only:
