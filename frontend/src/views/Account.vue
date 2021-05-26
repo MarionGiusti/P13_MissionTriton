@@ -291,11 +291,11 @@ export default {
         this.onUploadBackground();
       }
     },
-    onUpload() {
+    async onUpload() {
       const fd = new FormData();
       fd.append("file", this.selectedFile, this.selectedFile.name);
       try {
-        getAPI.post("/api/users/profile_picture/", fd, {
+        await getAPI.post("/api/users/profile_picture/", fd, {
           headers: {
             Authorization: "Token " + this.$store.state.token,
             "Content-Type": "multipart/form-data"
@@ -306,11 +306,11 @@ export default {
         console.log(`erreur: ${err}`);
       }
     },
-    onUploadBackground() {
+    async onUploadBackground() {
       const fd = new FormData();
       fd.append("file", this.selectedFile, this.selectedFile.name);
       try {
-        getAPI.post("/api/users/background_picture/", fd, {
+        await getAPI.post("/api/users/background_picture/", fd, {
           headers: {
             Authorization: "Token " + this.$store.state.token,
             "Content-Type": "multipart/form-data"
