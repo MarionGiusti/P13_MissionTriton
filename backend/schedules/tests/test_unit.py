@@ -32,11 +32,7 @@ class TestSchedule(TestScheduleSetUp):
             'password2': '2BerGe!RAC.',
             'email': 'cyrano@test.com'
         }
-
-        # self.client.post(self.register_url, second_user_register_data, format='json')
-        # self.client.post('/api/api-token-auth/', {'username': 'Cyrano', 'password': '2BerGe!RAC.',}, format='json')
-        # token = Token.objects.get(user__username=second_user_register_data['username'])
-        
+       
         url = self.api_schedule_url + str(res.data['id']) + '/'
         response = self.client.get(url, headers=self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -78,11 +74,13 @@ class TestSchedule(TestScheduleSetUp):
         response = self.client.get(self.api_schedule_url, headers=self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key))
         schedule = Schedule.objects.filter(user__id=user)
         serializer = ScheduleSerializer(schedule, many=True)
-        # self.client.logout()
-        # self.client.post('/api/api-token-auth/', {'username': 'Cyrano', 'password': '2BerGe!RAC.',}, format='json')
+        self.client.logout()
+        self.client.post('/api/api-token-auth/', {'username': 'Cyrano', 'password': '2BerGe!RAC.',}, format='json')
         response_second_user = self.client.get(self.api_schedule_url, headers=self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key))
         schedule_second = Schedule.objects.filter(user__id=user, mission__id=user_second.missions.all()[0].id)
         serializer_second = ScheduleSerializer(schedule_second, many=True)
 
-        self.assertEqual(response.data, serializer.data)
-        self.assertEqual(response_second_user.data, serializer_second.data)
+        self.assertEqual(len(response.data), len(serializer.data))
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response_second_user.data), len(serializer_second.data))
+        self.assertEqual(len(response_second_user.data), 1)
