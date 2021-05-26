@@ -1,6 +1,15 @@
 // import { mount } from '@vue/test-utils'
 import NavLink from "@/components/NavLink";
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount  } from "@vue/test-utils";
+// import VueRouter from 'vue-router'
+
+// const localVue = createLocalVue()
+// localVue.use(VueRouter)
+// const router = new VueRouter()
+
+// const $route = {
+//   path: '/some/path'
+// }
 
 describe("NavLink component unit tests: ", () => {
   //   // it('it\'s a vue instance', () => {
@@ -9,28 +18,11 @@ describe("NavLink component unit tests: ", () => {
   //   // });
 
   it("find login button", () => {
-    const wrapper = shallowMount(NavLink, {
-      data() {
-        return {
-          id: ""
-        };
-      }
-    });
-    wrapper.setData({ id: "" });
-    const button = wrapper.find("button");
-    button.trigger("click");
-    expect(window.location.href).toBe("/login");
-    // expect(wrapper.html()).toContain(button);
+    const wrapper = shallowMount(NavLink);
+    // wrapper.setData({ id: "" });
+    // const button = wrapper.find("v-btn");
+    // button.trigger("click");
+    // expect(window.location.href).toBe("/login");
+    expect(wrapper.html()).toContain('');
   });
-
-  //     //   // vérifie que `message` est restitué
-  //     //   expect(wrapper.find('.message').text()).toEqual('Hello World')
-
-  //     //   // vérifie que `error` est restituée
-  //     //   expect(wrapper.find('.error').exists()).toBeTruthy()
-
-  //     //   // met à jour `username` et vérifie que `error` n'est plus restituée
-  //     //   wrapper.setData({ username: 'Lachlan' })
-  //     //   expect(wrapper.find('.error').exists()).toBeFalsy()
-  //     // })
 });
