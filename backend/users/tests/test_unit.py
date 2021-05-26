@@ -13,11 +13,6 @@ from users.serializers import UserSerializer, MissionUserSerializer
 from missions.models import Mission
 from .test_setup import TestUserSetUp, TestMissionUserSetUp
 
-from PIL import Image
-from django.core.files.uploadedfile import SimpleUploadedFile
-import io
-
-
 class TestUser(TestUserSetUp):
     def test_user_cannot_register_with_no_data(self):
         response = self.client.post(self.register_url)
@@ -63,38 +58,7 @@ class TestUser(TestUserSetUp):
         second_user_id = CustomUser.objects.get(username=second_user_register_data['username']).id
         self.client.logout()
         response = self.client.get(self.api_users)
-        # users = CustomUser.objects.all()
-        # serializer = UserSerializer(users, many=True)
-        # import pdb
-        # pdb.set_trace()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # self.assertEqual(response.data, serializer.data)
-        # self.assertEqual(response.data[0], {
-        #     'id': user_id,
-        #     'username': self.user_register_data['username'],
-        #     'first_name': '',
-        #     'last_name': '',
-        #     'email': self.user_register_data['email'],
-        #     'profile_image': 'http://testserver/media/profile.png',
-        #     'profile_background_image': 'http://testserver/media/jakob-owens-turtle-unsplash.jpg',
-        #     'linkedin_link': None,
-        #     'researchgate_link': None,
-        #     'missions': []
-        #     }
-        # )
-        # self.assertEqual(response.data[1], {
-        #     'id': second_user_id,
-        #     'username': second_user_register_data['username'],
-        #     'first_name': '',
-        #     'last_name': '',
-        #     'email': second_user_register_data['email'],
-        #     'profile_image': 'http://testserver/media/profile.png',
-        #     'profile_background_image': 'http://testserver/media/jakob-owens-turtle-unsplash.jpg',
-        #     'linkedin_link': None,
-        #     'researchgate_link': None,
-        #     'missions': []
-        #     }
-        # )
 
     def test_user_detail_data_available_readonly(self):
         self.client.post(self.register_url, self.user_register_data, format='json')
@@ -170,28 +134,40 @@ class TestUser(TestUserSetUp):
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    # def test_user_picture_edit_with_owner_authenticated(self):
-    #     # tmp_file = SimpleUploadedFile("file.jpg", "file_content", content_type="image/jpg")
-    #     self.client.post(self.register_url, self.user_register_data, format='json')
+    def test_user_picture_edit_with_owner_authenticated(self):
+        self.client.post(self.register_url, self.user_register_data, format='json')
+       
+        token = Token.objects.get(user__username=self.user_register_data['username'])
+        filePath = 'C:/Users/mgius/FormaPython/P13_MissionTriton/backend/users/tests/cameleon.jpg'
 
-    #     file = io.BytesIO()
-    #     image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))
-    #     image.save(file, 'png')
-    #     file.name = 'test.png'
-    #     file.seek(0)
+        # file = File(open(filePath, 'rb'))
+        # uploaded_file = SimpleUploadedFile('cameleon.jpg', file.read(),
+        #     content_type='multipart/form-data')
+        # fd = {'file', uploaded_file}
+        # import pdb
+        # pdb.set_trace()
 
-    #     profile_image = file
+        # response = self.client.post('/api/users/profile_picture/', files=fd,  
+        #     headers=self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key), 
+        #     content_type = 'multipart')
 
-    #     import pdb
-    #     pdb.set_trace()
-        
-    #     token = Token.objects.get(user__username=self.user_register_data['username'])
+        # with open(filePath, 'rb') as img:
+        #     files = {'file':('cameleon.jpg', img.read())}
+        #     # files = SimpleUploadedFile('file', content=img.read(), content_type='text/plain')
 
-    #     response = self.client.post('/api/users/profile_picture/', {"profile_image": profile_image},  
-    #         headers=self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key), 
-    #         content_type = 'multipart/form-data')
+        fileFp = open(filePath, 'rb')
+        fileImage = {
+            "file": fileFp,
+        }
 
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # import pdb
+        # pdb.set_trace()
+
+        response = self.client.post('/api/users/profile_picture/', files=fileImage,  
+            headers=self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key), 
+            content_type = 'multipart/form-data')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class TestMissionUser(TestMissionUserSetUp):

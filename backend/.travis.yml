@@ -9,6 +9,7 @@ addons:
 
 before_script:
   - pip install -r requirements.txt
+  - cd ./backend/
 
 branches:
   only:
