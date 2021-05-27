@@ -30,10 +30,6 @@ export default {
         route: "Home"
       },
       {
-        title: "Mission Triton",
-        route: "Triton"
-      },
-      {
         title: "Mentions Légales",
         route: "LegalMentions"
       }

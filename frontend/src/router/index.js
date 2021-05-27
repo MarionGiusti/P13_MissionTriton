@@ -15,7 +15,6 @@ import Mission from "../views/Mission.vue";
 import OnBoard from "../views/OnBoard.vue";
 import Register from "../views/Register.vue";
 import Schedule from "../views/Schedule.vue";
-import Triton from "../views/Triton.vue";
 
 Vue.use(VueRouter);
 
@@ -106,11 +105,6 @@ const routes = [
         next();
       }
     }
-  },
-  {
-    name: "Triton",
-    path: "/aboutTriton",
-    component: Triton
   },
   {
     path: "*",

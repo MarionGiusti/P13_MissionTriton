@@ -11,6 +11,7 @@ const store = new Vuex.Store({});
 describe("Mission.vue", () => {
   it("checks textcontent", () => {
     const wrapper = mount(Mission);
+    const text = wrapper.find('h1')
     expect(wrapper.html()).toContain(h1);
   });
 });

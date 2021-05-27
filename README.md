@@ -52,7 +52,9 @@ Copy those variables and change their values.
 
 
 ## Monitoring:
-- Travis-CI : continue integration, run app tests before a pull request
+- Travis-CI : continue integration, 
+run backend tests when code push on a staging branch, create a pull request
+to authorize or not merging
 
 ## Online version:
-:ocean: :fish: :volcano:
+[link here!](http://206.189.7.202/) :ocean: :fish: :volcano:
