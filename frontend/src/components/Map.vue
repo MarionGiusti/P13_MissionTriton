@@ -15,7 +15,7 @@
 
             <v-text-field
               label="Longitude"
-              type="number"
+              type="text"
               color="teal"
               v-model="send_form.form.longitude"
               :rules="longitudeRules"
@@ -26,9 +26,10 @@
               v-model="send_form.form.date_time"
               label="Date"
               required
+              :rules="dateRules"
               color="teal"
               type="datetime-local"
-              :value="this.dateTimeExample"
+              value="this.dateTimeExample"
             ></v-text-field>
 
             <v-btn
@@ -184,10 +185,9 @@ export default {
           (v && v <= 180 && v >= -180) ||
           "Latitude comprise entre -180° et 180°"
       ],
-      // DateRules: [
-      //   v => !!v || 'Date is required',
-      //   v => /.+@.+\..+/.test(v) || 'Date must be valid',
-      // ],
+      dateRules: [
+        v => !!v || 'Date is required, e.g.: 2021-05-01T00:00:00Z',
+      ],
 
       dialog: false,
       dialogDelete: false,

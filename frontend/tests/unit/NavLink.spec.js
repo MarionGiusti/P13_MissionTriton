@@ -1,28 +1,62 @@
-// import { mount } from '@vue/test-utils'
+import { shallowMount, createLocalVue  } from "@vue/test-utils";
+import VueRouter from 'vue-router'
 import NavLink from "@/components/NavLink";
-import { shallowMount  } from "@vue/test-utils";
-// import VueRouter from 'vue-router'
+import Vuetify from'vuetify'
+import Vue from 'vue'
 
 // const localVue = createLocalVue()
 // localVue.use(VueRouter)
-// const router = new VueRouter()
 
-// const $route = {
-//   path: '/some/path'
-// }
 
 describe("NavLink component unit tests: ", () => {
-  //   // it('it\'s a vue instance', () => {
-  //   //   const wrapper = mount(NavLink);
-  //   //   expect(wrapper.IsVueInstance()).toBeTruthy();
-  //   // });
+
+  const localVue = createLocalVue()
+  let vuetify
+
+  const router = new VueRouter()
+
+  const $route = {
+    path: '/some/path'
+  }
+
+  const $store = {
+    state: {
+      token: null,
+      userID: null,
+      userDetails: {},
+    },
+    getters: {
+      currentMission: () => {}
+    }
+  }
+
+  beforeEach(() => {
+    vuetify = Vue.use(Vuetify)
+  })
 
   it("find login button", () => {
-    const wrapper = shallowMount(NavLink);
+    const wrapper = shallowMount(NavLink, {
+      localVue,
+      vuetify,
+      router,
+      mocks: {
+        $route: {
+          params: {
+            id: ''
+          }
+        },
+        $store
+      }
+    });
     // wrapper.setData({ id: "" });
-    // const button = wrapper.find("v-btn");
-    // button.trigger("click");
-    // expect(window.location.href).toBe("/login");
-    expect(wrapper.html()).toContain('');
+    const button = wrapper.find("v-btn");
+    button.trigger("click");
+    expect(window.location.href).toBeTrue;
+    // expect(wrapper.html()).toContain('');
   });
+  
+  // it('it\'s a vue instance', () => {
+  // const wrapper = ShallowMount(NavLink);
+  // expect(wrapper.IsVueInstance()).toBeTruthy();
+  // });
 });
