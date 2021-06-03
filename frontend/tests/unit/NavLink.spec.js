@@ -1,23 +1,10 @@
 import { shallowMount, createLocalVue  } from "@vue/test-utils";
-import VueRouter from 'vue-router'
 import NavLink from "@/components/NavLink";
 import Vuetify from'vuetify'
-import Vue from 'vue'
-
-// const localVue = createLocalVue()
-// localVue.use(VueRouter)
-
 
 describe("NavLink component unit tests: ", () => {
-
   const localVue = createLocalVue()
   let vuetify
-
-  const router = new VueRouter()
-
-  const $route = {
-    path: '/some/path'
-  }
 
   const $store = {
     state: {
@@ -31,14 +18,13 @@ describe("NavLink component unit tests: ", () => {
   }
 
   beforeEach(() => {
-    vuetify = Vue.use(Vuetify)
+    vuetify = new Vuetify()
   })
 
   it("find login button", () => {
     const wrapper = shallowMount(NavLink, {
       localVue,
       vuetify,
-      router,
       mocks: {
         $route: {
           params: {
@@ -48,15 +34,8 @@ describe("NavLink component unit tests: ", () => {
         $store
       }
     });
-    // wrapper.setData({ id: "" });
+
     const button = wrapper.find("v-btn");
-    button.trigger("click");
-    expect(window.location.href).toBeTrue;
-    // expect(wrapper.html()).toContain('');
+    expect(button.exists()).toBeTrue;
   });
-  
-  // it('it\'s a vue instance', () => {
-  // const wrapper = ShallowMount(NavLink);
-  // expect(wrapper.IsVueInstance()).toBeTruthy();
-  // });
 });

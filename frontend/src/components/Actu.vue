@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <!-- <h1>{{verifMember}}</h1> -->
     <div class="mx-8">
       <v-btn
         color="#198F8F"
@@ -305,13 +304,6 @@ export default {
 
   computed: {
     ...mapState(["postActu"]),
-    // ...mapGetters([ 'memberMission', 'currentMission' ]),
-    // missionD() {
-    //   return this.currentMission(this.$route.params.id)
-    // },
-    // verifMember() {
-    //   return this.memberMission(this.missionD["name"])
-    // }
     ...mapGetters(["memberMission"]),
     verifMember() {
       return this.memberMission(this.$route.params.id);

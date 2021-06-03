@@ -62,31 +62,10 @@ export default new Vuex.Store({
         );
     },
 
-    // memberMission:(state)=> (missionName) => {
-    //   var missionNameUser = []
-    //   for (const mission in state.userDetails.missions) {
-    //     var miss = state.userDetails.missions[mission].name
-    //     console.log('mission', miss)
-    //     missionNameUser.push(miss)
-    //   }
-    //   // var miss = state.missions.find(missions => missions.id === parseInt(id))
-    //   // console.log("MISS",miss.name)
-    //   // // for (const item  in miss) {
-    //   // //   var missi = miss[item].name
-    //   // //   console.log('missi', missi)
-    //   // // }
-    //   return missionNameUser.includes(missionName)
-    // }
     memberMission: (state, getters) => id => {
       if (!state.userDetails.missions) {
         return;
       }
-      // let missionNameUser = []
-      // for (const mission in state.userDetails.missions) {
-      //   let miss = state.userDetails.missions[mission].name
-      //   console.log('mission', miss)
-      //   missionNameUser.push(miss)
-      // }
 
       return state.userDetails.missions
         .map(mission => mission.name)

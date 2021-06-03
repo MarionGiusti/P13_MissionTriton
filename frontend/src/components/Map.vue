@@ -127,8 +127,6 @@
             <gmap-polyline :path.sync="shippath" :options="polylineOptions">
             </gmap-polyline>
           </GmapMap>
-          <!-- <div id="map" ref="map">
-            </div> -->
         </v-col>
       </v-row>
     </div>
@@ -216,7 +214,6 @@ export default {
   watch: {
     async $route(to, from) {
       if (to !== from) {
-        // console.log('POS',this.shippos, 'PATH',this.shippath)
         await this.$store.dispatch(
           "getShipPositionsMission",
           this.$route.params.id
@@ -231,11 +228,6 @@ export default {
     dialog(val) {
       val || this.close();
     }
-
-    // currentMission(promise) {
-    //   // save Promise result in local state
-    //   promise.then(this.verifMember)
-    // }
   },
 
   async created() {
@@ -368,7 +360,6 @@ export default {
 
     async save(item) {
       if (this.editedIndex > -1) {
-        console.log("BEEEE!!!!!!!!!!!", this.Coordinates);
         Object.assign(this.Coordinates[this.editedIndex], this.editedItem);
       } else {
         this.Coordinates.push(this.editedItem);

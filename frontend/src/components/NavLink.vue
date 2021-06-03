@@ -133,22 +133,18 @@ export default {
         {
           title:"Mon compte",
           route:"Account",
-          // action: "",
         },
         {
           title:"Mon agenda",
           route:"Schedule",
-          // action: "",
         },
         {
           title:"Ajouter une mission",
           route:"AddMission",
-          // action: "",
         },
         {
           title:"Se déconnecter",
           route:"Home",
-          // action: this.logout,
         },
       ],
     }
