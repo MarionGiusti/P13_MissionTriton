@@ -287,7 +287,7 @@ export default {
         this.mission = "";
         this.color = "";
       } else {
-        alert("Name, start and date are required");
+        alert("Le titre, la date de début et de fin sont requis !");
       }
     },
 

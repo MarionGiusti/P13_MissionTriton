@@ -1,4 +1,5 @@
 """Unit test for the user application"""
+import os
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -134,41 +135,16 @@ class TestUser(TestUserSetUp):
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    # def test_user_picture_edit_with_owner_authenticated(self):
-    #     self.client.post(self.register_url, self.user_register_data, format='json')
-       
-    #     token = Token.objects.get(user__username=self.user_register_data['username'])
-    #     filePath = 'C:/Users/mgius/FormaPython/P13_MissionTriton/backend/users/tests/cameleon.jpg'
+    def test_user_picture_edit_with_owner_authenticated(self):
+        self.user = CustomUser.objects.create(username="Hélène", email="ln@test.com")
+        self.client.force_authenticate(user=self.user, token="123")
+        headers = {"HTTP_CONTENT_DISPOSITION": "attachment; filename=camelelon.jpg"}
+        with open(os.path.join(os.getcwd(),"users/tests/cameleon.jpg"), "rb") as file_:
+            response = self.client.post(
+                '/api/users/profile_picture/', {"file": file_}, format="multipart", **headers
+            )
 
-    #     # file = File(open(filePath, 'rb'))
-    #     # uploaded_file = SimpleUploadedFile('cameleon.jpg', file.read(),
-    #     #     content_type='multipart/form-data')
-    #     # fd = {'file', uploaded_file}
-    #     # import pdb
-    #     # pdb.set_trace()
-
-    #     # response = self.client.post('/api/users/profile_picture/', files=fd,  
-    #     #     headers=self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key), 
-    #     #     content_type = 'multipart')
-
-    #     # with open(filePath, 'rb') as img:
-    #     #     files = {'file':('cameleon.jpg', img.read())}
-    #     #     # files = SimpleUploadedFile('file', content=img.read(), content_type='text/plain')
-
-    #     fileFp = open(filePath, 'rb')
-    #     fileImage = {
-    #         "file": fileFp,
-    #     }
-
-    #     # import pdb
-    #     # pdb.set_trace()
-
-    #     response = self.client.post('/api/users/profile_picture/', files=fileImage,  
-    #         headers=self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key), 
-    #         content_type = 'multipart/form-data')
-
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 class TestMissionUser(TestMissionUserSetUp):
     def test_missionuser_created_automatically(self):
