@@ -47,17 +47,8 @@ class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsUserOwnerOrReadOnly,)
 
-    # def get(self, request, *args, **kwargs):
-    #     queryset = CustomUser.objects.all()
-    #     serializer = UserSerializer(queryset, many=True, context={"request":request})
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
-
     @action(methods=["POST"], detail=False)
     def profile_picture(self, request):
-        print('REQUEST', request)
-        print('REQUEST.DATA', request.data)
-        print('REQUEST.FILES', request.FILES)
-        print('REQUEST.FILES["file"]', request.FILES["file"])
         user = CustomUser.objects.get(id = request.user.id)
         user.profile_image = request.FILES["file"]
         user.save()
