@@ -2,4 +2,7 @@ env/
 **/__pycache__
 **/.env
 **/staticfiles/
-**/mediafiles/
+**/mediafiles/missions_pics/
+**/mediafiles/post_pics/
+**/mediafiles/profile_brackground_pics/
+**/mediafiles/profile_pics/
